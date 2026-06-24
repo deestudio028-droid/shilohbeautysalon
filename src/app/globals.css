@@ -1,26 +1,186 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050B1F;
+  --foreground: #ffffff;
+  
+  --primary-pink: #FF2D95;
+  --primary-orange: #FF7A00;
+  --primary-purple: #7B2CFF;
+  --primary-cyan: #00D4FF;
+  --primary-gold: #FFD166;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  --color-pink-brand: var(--primary-pink);
+  --color-orange-brand: var(--primary-orange);
+  --color-purple-brand: var(--primary-purple);
+  --color-cyan-brand: var(--primary-cyan);
+  --color-gold-brand: var(--primary-gold);
+  
+  --font-serif: var(--font-playfair), serif;
+  --font-sans: var(--font-poppins), sans-serif;
+  
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float-delayed 8s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-10px) scale(1.02); }
 }
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) scale(1.02); }
+  50% { transform: translateY(10px) scale(0.98); }
+}
+
+/* ── Luxury beauty ambient glow breath ── */
+@keyframes bokeh-breath-1 {
+  0%, 100% { transform: scale(1)   translateY(0);   opacity: 0.55; }
+  50%       { transform: scale(1.1) translateY(-18px); opacity: 0.75; }
+}
+@keyframes bokeh-breath-2 {
+  0%, 100% { transform: scale(1.05) translateX(0);   opacity: 0.45; }
+  50%       { transform: scale(0.92) translateX(14px); opacity: 0.65; }
+}
+@keyframes bokeh-breath-3 {
+  0%, 100% { transform: scale(0.95) translate(0, 0);     opacity: 0.40; }
+  50%       { transform: scale(1.08) translate(-10px, 12px); opacity: 0.60; }
+}
+@keyframes bokeh-breath-4 {
+  0%, 100% { transform: scale(1)   translate(0, 0);    opacity: 0.35; }
+  40%       { transform: scale(1.12) translate(8px, -8px); opacity: 0.55; }
+  80%       { transform: scale(0.94) translate(-6px, 6px); opacity: 0.40; }
+}
+
+/* ── Silk-fabric diagonal shimmer ── */
+@keyframes silk-shimmer {
+  0%   { background-position: 200% 50%; }
+  100% { background-position: -200% 50%; }
+}
+
+/* ── Elegant logo pulse glow ── */
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%       { opacity: 0.85; transform: scale(1.07); }
+}
+
+/* ── Very slow ornament drift ── */
+@keyframes ornament-drift {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50%       { transform: rotate(4deg) scale(1.03); }
+}
+
+/* ── Luxury beauty mesh background (brand colors only) ── */
+.hero-mesh {
+  background-image:
+    /* Gold warmth — top center */
+    radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(255, 209, 102, 0.09) 0%, transparent 65%),
+    /* Pink — left */
+    radial-gradient(ellipse 65% 70% at 0%  55%,  rgba(255,  45, 149, 0.10) 0%, transparent 60%),
+    /* Purple — top right */
+    radial-gradient(ellipse 60% 60% at 100% 15%, rgba(123,  44, 255, 0.12) 0%, transparent 60%),
+    /* Cyan — bottom right */
+    radial-gradient(ellipse 55% 45% at 90%  90%, rgba(  0, 212, 255, 0.07) 0%, transparent 55%),
+    /* Gold — bottom left warmth */
+    radial-gradient(ellipse 50% 40% at 10%  85%, rgba(255, 209, 102, 0.06) 0%, transparent 55%);
+}
+
+/* Silk overlay — diagonal luster */
+.hero-silk {
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(255, 209, 102, 0.025) 25%,
+    rgba(255,  45, 149, 0.020) 50%,
+    rgba(123,  44, 255, 0.020) 75%,
+    transparent 100%
+  );
+  background-size: 300% 300%;
+  animation: silk-shimmer 18s ease-in-out infinite;
+}
+
+/* Logo glow pulse */
+.logo-pulse-ring {
+  animation: logo-pulse 4s ease-in-out infinite;
+}
+
+/* Bokeh circle helpers */
+.bokeh-1 { animation: bokeh-breath-1 12s ease-in-out infinite; }
+.bokeh-2 { animation: bokeh-breath-2 16s ease-in-out infinite; }
+.bokeh-3 { animation: bokeh-breath-3 20s ease-in-out infinite; }
+.bokeh-4 { animation: bokeh-breath-4 14s ease-in-out infinite; }
+
+/* Ornament slow float */
+.ornament-float { animation: ornament-drift 22s ease-in-out infinite; }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+}
+
+/* Glassmorphism utility classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(255, 45, 149, 0.15);
+}
+
+.glass-nav {
+  background: rgba(5, 11, 31, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glow highlights */
+.glow-pink:hover {
+  box-shadow: 0 0 25px rgba(255, 45, 149, 0.4);
+}
+.glow-orange:hover {
+  box-shadow: 0 0 25px rgba(255, 122, 0, 0.4);
+}
+.glow-cyan:hover {
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+}
+.glow-gold:hover {
+  box-shadow: 0 0 25px rgba(255, 209, 102, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050B1F;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 45, 149, 0.3);
 }
