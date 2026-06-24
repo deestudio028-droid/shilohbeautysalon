@@ -122,6 +122,11 @@ drop policy if exists "Allow auth CRUD on appointments" on appointments;
 create policy "Allow auth CRUD on appointments" on appointments
   for all using (auth.role() = 'authenticated');
 
+-- Policy: Allow public read access (necessary for anonymous users checking slot capacity)
+drop policy if exists "Allow public select on appointments" on appointments;
+create policy "Allow public select on appointments" on appointments
+  for select using (true);
+
 
 -- 5b. Business Settings Table (Singleton)
 create table if not exists business_settings (

@@ -373,7 +373,11 @@ export const db = {
   async getAppointments(): Promise<Appointment[]> {
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.from("appointments").select("*").order("preferred_date", { ascending: true });
-      if (!error && data) return data;
+      if (error) {
+        console.error("Supabase getAppointments error:", error);
+        throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
+      }
+      return data || [];
     }
     return getLocal<Appointment[]>(LOCAL_STORAGE_KEYS.APPOINTMENTS, []);
   },
@@ -424,6 +428,17 @@ export const db = {
     };
 
     if (isSupabaseConfigured && supabase) {
+      console.log("Supabase is configured. Attempting to insert booking payload:", {
+        name: appointment.name,
+        phone: appointment.phone,
+        service: appointment.service,
+        appointment_type: appointment.appointment_type,
+        address: appointment.address,
+        preferred_date: appointment.preferred_date,
+        preferred_time: appointment.preferred_time,
+        booking_type: bookingType,
+        appointment_reference: reference
+      });
       const dbPayload = {
         name: appointment.name,
         phone: appointment.phone,
@@ -438,12 +453,15 @@ export const db = {
         appointment_reference: reference
       };
       const { data, error } = await supabase.from("appointments").insert([dbPayload]).select().single();
-      if (!error && data) return data;
       if (error) {
-        console.error("Supabase createAppointment error:", error);
+        console.error("Supabase createAppointment error response:", error);
+        throw new Error(`Supabase INSERT failed: ${error.message} (Code: ${error.code})`);
       }
+      console.log("Supabase insert succeeded. Inserted data:", data);
+      if (data) return data;
     }
 
+    console.log("Supabase not configured. Using local storage fallback.");
     const allAppts = await this.getAppointments();
     allAppts.unshift(newAppointment);
     setLocal(LOCAL_STORAGE_KEYS.APPOINTMENTS, allAppts);
@@ -454,7 +472,11 @@ export const db = {
   async updateAppointmentStatus(id: string, status: "Pending Confirmation" | "Confirmed" | "Completed" | "Cancelled"): Promise<boolean> {
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
-      if (!error) return true;
+      if (error) {
+        console.error("Supabase updateAppointmentStatus error:", error);
+        throw new Error(`Database UPDATE failed: ${error.message} (Code: ${error.code})`);
+      }
+      return true;
     }
     const appointments = await this.getAppointments();
     const idx = appointments.findIndex(a => a.id === id);
@@ -469,7 +491,11 @@ export const db = {
   async deleteAppointment(id: string): Promise<boolean> {
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.from("appointments").delete().eq("id", id);
-      if (!error) return true;
+      if (error) {
+        console.error("Supabase deleteAppointment error:", error);
+        throw new Error(`Database DELETE failed: ${error.message} (Code: ${error.code})`);
+      }
+      return true;
     }
     const appointments = await this.getAppointments();
     const filtered = appointments.filter(a => a.id !== id);
@@ -481,19 +507,21 @@ export const db = {
   async getFeedbacks(): Promise<Feedback[]> {
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.from("feedbacks").select("*").order("created_at", { ascending: false });
-      if (!error && data) {
-        return data.map((item: any) => ({
-          id: item.id,
-          customer_name: item.customer_name,
-          phone_number: item.phone_number,
-          service_name: item.service_name,
-          rating: item.rating,
-          message: item.message,
-          photo_url: item.photo_url || undefined,
-          status: item.status,
-          created_at: item.created_at
-        }));
+      if (error) {
+        console.error("Supabase getFeedbacks error:", error);
+        throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
       }
+      return data ? data.map((item: any) => ({
+        id: item.id,
+        customer_name: item.customer_name,
+        phone_number: item.phone_number,
+        service_name: item.service_name,
+        rating: item.rating,
+        message: item.message,
+        photo_url: item.photo_url || undefined,
+        status: item.status,
+        created_at: item.created_at
+      })) : [];
     }
     return getLocal<Feedback[]>(LOCAL_STORAGE_KEYS.FEEDBACKS, []);
   },
@@ -518,6 +546,12 @@ export const db = {
       created_at: new Date().toISOString()
     };
     if (isSupabaseConfigured && supabase) {
+      console.log("Supabase is configured. Attempting to insert feedback payload:", {
+        customer_name: feedback.customer_name,
+        phone_number: feedback.phone_number,
+        service_name: feedback.service_name,
+        rating: feedback.rating
+      });
       const dbPayload = {
         customer_name: feedback.customer_name,
         phone_number: feedback.phone_number,
@@ -528,9 +562,15 @@ export const db = {
         status: "Pending"
       };
       const { data, error } = await supabase.from("feedbacks").insert([dbPayload]).select().single();
-      if (!error && data) return data;
-      if (error) console.error("addFeedback error:", error);
+      if (error) {
+        console.error("Supabase addFeedback error response:", error);
+        throw new Error(`Supabase INSERT failed: ${error.message} (Code: ${error.code})`);
+      }
+      console.log("Supabase feedback insert succeeded. Inserted data:", data);
+      if (data) return data;
     }
+
+    console.log("Supabase not configured. Using local storage fallback.");
     const feedbacks = await this.getFeedbacks();
     feedbacks.unshift(newFeedback);
     setLocal(LOCAL_STORAGE_KEYS.FEEDBACKS, feedbacks);
@@ -540,7 +580,11 @@ export const db = {
   async updateFeedbackStatus(id: string, status: "Pending" | "Approved" | "Rejected"): Promise<boolean> {
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.from("feedbacks").update({ status }).eq("id", id);
-      if (!error) return true;
+      if (error) {
+        console.error("Supabase updateFeedbackStatus error:", error);
+        throw new Error(`Database UPDATE failed: ${error.message} (Code: ${error.code})`);
+      }
+      return true;
     }
     const feedbacks = await this.getFeedbacks();
     const idx = feedbacks.findIndex(f => f.id === id);
@@ -555,7 +599,11 @@ export const db = {
   async deleteFeedback(id: string): Promise<boolean> {
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.from("feedbacks").delete().eq("id", id);
-      if (!error) return true;
+      if (error) {
+        console.error("Supabase deleteFeedback error:", error);
+        throw new Error(`Database DELETE failed: ${error.message} (Code: ${error.code})`);
+      }
+      return true;
     }
     const feedbacks = await this.getFeedbacks();
     const filtered = feedbacks.filter(f => f.id !== id);
