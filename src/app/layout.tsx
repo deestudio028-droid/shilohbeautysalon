@@ -19,6 +19,14 @@ export const metadata: Metadata = {
   description: "Indulge in premium beauty services, bridal makeup, hair treatments, and kids styling in a royal, elegant environment at Shiloh Salon. Home services available in Chennai.",
   keywords: "Beauty Salon, Bridal Makeup, Hair Spa, Facial Services, Home Beauty Services, Ladies Salon, Kids Salon, Kolathur, Chennai, Shiloh Beauty Salon",
   authors: [{ name: "Shiloh Salon" }],
+  icons: {
+    icon: [
+      {
+        url: "https://www.shilohbeautysalon.com/favicon.ico",
+        type: "image/x-icon",
+      }
+    ]
+  }
 };
 
 export default function RootLayout({
