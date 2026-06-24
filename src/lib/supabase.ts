@@ -460,13 +460,25 @@ export const db = {
         booking_type: bookingType,
         appointment_reference: reference
       };
-      const { data, error } = await supabase.from("appointments").insert([dbPayload]).select().single();
+      const { data, error } = await supabase
+        .from("appointments")
+        .insert([dbPayload])
+        .select("id, preferred_date, preferred_time, status, booking_type, appointment_reference")
+        .single();
       if (error) {
         console.error("Supabase createAppointment error response:", error);
         throw new Error(`Supabase INSERT failed: ${error.message} (Code: ${error.code})`);
       }
       console.log("Supabase insert succeeded. Inserted data:", data);
-      if (data) return data;
+      if (data) {
+        return {
+          ...appointment,
+          id: data.id,
+          status: data.status,
+          booking_type: data.booking_type,
+          appointment_reference: data.appointment_reference
+        } as Appointment;
+      }
     }
 
     console.log("Supabase not configured. Using local storage fallback.");
@@ -577,13 +589,24 @@ export const db = {
         photo_url: feedback.photo_url || null,
         status: "Pending"
       };
-      const { data, error } = await supabase.from("feedbacks").insert([dbPayload]).select().single();
+      const { data, error } = await supabase
+        .from("feedbacks")
+        .insert([dbPayload])
+        .select("id, customer_name, service_name, rating, message, photo_url, status, created_at")
+        .single();
       if (error) {
         console.error("Supabase addFeedback error response:", error);
         throw new Error(`Supabase INSERT failed: ${error.message} (Code: ${error.code})`);
       }
       console.log("Supabase feedback insert succeeded. Inserted data:", data);
-      if (data) return data;
+      if (data) {
+        return {
+          ...feedback,
+          id: data.id,
+          status: data.status,
+          created_at: data.created_at
+        } as Feedback;
+      }
     }
 
     console.log("Supabase not configured. Using local storage fallback.");
