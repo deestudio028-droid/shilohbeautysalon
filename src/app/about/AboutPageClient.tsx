@@ -269,12 +269,14 @@ export default function AboutPageClient() {
             >
               <div className="relative p-2 rounded-full border border-white/10 bg-[#050B1F]/60 backdrop-blur-md shadow-2xl">
                 <div className="relative w-56 h-56 rounded-full overflow-hidden border-2 border-[#FFD166]/40 p-1 bg-gradient-to-tr from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF]">
-                  <div className="w-full h-full rounded-full bg-[#050B1F] flex items-center justify-center relative overflow-hidden group">
-                    {/* Stylized Avatar Silhouette representing a premium stylist */}
-                    <svg className="w-36 h-36 text-gray-500/80 mt-10 group-hover:scale-105 transition-transform duration-500" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#FF2D95]/30 to-transparent pointer-events-none" />
+                  <div className="w-full h-full rounded-full bg-[#050B1F] relative overflow-hidden group">
+                    <Image
+                      src="/images/founder.webp"
+                      alt="Shiloh Founder & Lead Stylist"
+                      fill
+                      sizes="224px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                 </div>
 
