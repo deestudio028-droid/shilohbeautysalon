@@ -372,12 +372,20 @@ export const db = {
   // APPOINTMENTS (BOOKINGS)
   async getAppointments(): Promise<Appointment[]> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.from("appointments").select("*").order("preferred_date", { ascending: true });
+      const { data: { user } } = await supabase.auth.getUser();
+      const selectQuery = user 
+        ? "*" 
+        : "id, preferred_date, preferred_time, status, booking_type, appointment_reference";
+      
+      const { data, error } = await supabase
+        .from("appointments")
+        .select(selectQuery)
+        .order("preferred_date", { ascending: true });
       if (error) {
         console.error("Supabase getAppointments error:", error);
         throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
       }
-      return data || [];
+      return (data as any) || [];
     }
     return getLocal<Appointment[]>(LOCAL_STORAGE_KEYS.APPOINTMENTS, []);
   },
@@ -506,15 +514,23 @@ export const db = {
   // FEEDBACKS
   async getFeedbacks(): Promise<Feedback[]> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.from("feedbacks").select("*").order("created_at", { ascending: false });
+      const { data: { user } } = await supabase.auth.getUser();
+      const selectQuery = user 
+        ? "*" 
+        : "id, customer_name, service_name, rating, message, photo_url, status, created_at";
+
+      const { data, error } = await supabase
+        .from("feedbacks")
+        .select(selectQuery)
+        .order("created_at", { ascending: false });
       if (error) {
         console.error("Supabase getFeedbacks error:", error);
         throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
       }
-      return data ? data.map((item: any) => ({
+      return data ? (data as any[]).map((item: any) => ({
         id: item.id,
         customer_name: item.customer_name,
-        phone_number: item.phone_number,
+        phone_number: item.phone_number || "",
         service_name: item.service_name,
         rating: item.rating,
         message: item.message,

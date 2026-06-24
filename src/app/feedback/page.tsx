@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Star, Sparkles, User, Phone, Tag, MessageSquare, Upload, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/navbar";
@@ -325,8 +326,8 @@ export default function FeedbackPage() {
                     className="hidden"
                   />
                   {photoPreview && (
-                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-slate-950 shrink-0">
-                      <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-slate-955 shrink-0">
+                      <Image src={photoPreview} alt="Preview" fill unoptimized className="object-cover" />
                     </div>
                   )}
                   {photoUrl && !uploading && (

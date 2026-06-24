@@ -264,7 +264,7 @@ function DashboardInner() {
           name: (formValues.name || "").trim(),
           description: (formValues.description || "").trim(),
           benefits: formValues.benefits || [],
-          imageUrl: formValues.imageUrl || "/images/placeholder.jpg"
+          imageUrl: formValues.imageUrl || "/images/placeholder.webp"
         };
         if (editingId) {
           await db.updateProduct(editingId, payload);
@@ -718,7 +718,7 @@ function DashboardInner() {
                     <div key={s.id} className="glass-card p-5 rounded-2xl border border-white/5 flex flex-col justify-between group">
                       {s.imageUrl && (
                         <div className="relative h-32 w-full rounded-xl overflow-hidden mb-4 bg-slate-900">
-                          <img src={s.imageUrl} alt={s.name} className="w-full h-full object-cover object-center" />
+                          <Image src={s.imageUrl} alt={s.name} fill sizes="(max-width: 768px) 100vw, 30vw" className="object-cover object-center" />
                         </div>
                       )}
                       <div className="space-y-2 text-left flex-1">
@@ -756,7 +756,7 @@ function DashboardInner() {
                     <div key={p.id} className="glass-card p-5 rounded-2xl border border-white/5 flex flex-col justify-between">
                       {p.imageUrl && (
                         <div className="relative h-36 w-full rounded-xl overflow-hidden mb-4 bg-slate-900">
-                          <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+                          <Image src={p.imageUrl} alt={p.name} fill sizes="(max-width: 768px) 100vw, 20vw" className="object-cover" />
                         </div>
                       )}
                       <div className="space-y-2 text-left flex-1">
@@ -787,7 +787,7 @@ function DashboardInner() {
                   {filteredGallery.map(g => (
                     <div key={g.id} className="glass-card rounded-2xl overflow-hidden border border-white/5 group">
                       <div className="relative h-44 w-full bg-slate-900">
-                        <img src={g.imageUrl} alt={g.title} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                        <Image src={g.imageUrl} alt={g.title} fill sizes="(max-width: 768px) 100vw, 20vw" className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
                         <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#050B1F]/80 border border-white/10 rounded-full text-[9px] text-[#00D4FF] uppercase tracking-wider font-semibold">{g.category}</div>
                       </div>
                       <div className="p-4 flex items-center justify-between gap-3">
@@ -869,7 +869,7 @@ function DashboardInner() {
                                   <div className="flex items-center gap-2 text-left">
                                     {f.photo_url && (
                                       <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/10 bg-slate-950 shrink-0">
-                                        <img src={f.photo_url} alt={f.customer_name} className="w-full h-full object-cover" />
+                                        <Image src={f.photo_url} alt={f.customer_name} fill sizes="32px" className="object-cover" />
                                       </div>
                                     )}
                                     <span>{f.customer_name}</span>
@@ -1261,7 +1261,7 @@ function ImageUploadField({
       </label>
       {preview && (
         <div className="relative h-32 w-full rounded-xl overflow-hidden mb-3 bg-slate-900 border border-white/10">
-          <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+          <Image src={preview} alt="Preview" fill unoptimized className="object-cover" />
         </div>
       )}
       <button

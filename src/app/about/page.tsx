@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://shilohbeauty.com/images/logo.png",
+        url: "https://shilohbeauty.com/images/logo.webp",
         width: 800,
         height: 800,
         alt: "Shiloh Ladies & Kids Beauty Salon Logo",
@@ -26,7 +26,7 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "BeautySalon",
     "name": "Shiloh Beauty Salon",
-    "image": "https://shilohbeauty.com/images/logo.png",
+    "image": "https://shilohbeauty.com/images/logo.webp",
     "@id": "https://shilohbeauty.com/#salon",
     "url": "https://shilohbeauty.com/about",
     "telephone": "+919962110080",

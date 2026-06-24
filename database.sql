@@ -259,3 +259,45 @@ create policy "Allow auth CRUD on feedbacks" on feedbacks
   for all using (auth.role() = 'authenticated');
 
 
+-- =============================================================
+-- SQL Grants and Privacy Scoping for Shiloh Beauty Salon
+-- =============================================================
+
+-- 1. APPOINTMENTS PRIVILEGES
+-- Grant full CRUD rights to Admin / System roles
+grant all privileges on table public.appointments to authenticated, service_role;
+
+-- Revoke general public access first to establish privacy
+revoke all on table public.appointments from anon, public;
+
+-- Grant INSERT to anyone (for public booking creation)
+grant insert on table public.appointments to anon;
+
+-- Grant SELECT only to non-sensitive columns needed for slot computations
+grant select (id, preferred_date, preferred_time, status, booking_type, appointment_reference) on table public.appointments to anon;
+
+
+-- 2. FEEDBACKS PRIVILEGES
+-- Grant full CRUD rights to Admin / System roles
+grant all privileges on table public.feedbacks to authenticated, service_role;
+
+-- Revoke general public access first to establish privacy
+revoke all on table public.feedbacks from anon, public;
+
+-- Grant INSERT to anyone (for public feedback submission)
+grant insert on table public.feedbacks to anon;
+
+-- Grant SELECT only to non-sensitive columns (hiding phone numbers)
+grant select (id, customer_name, service_name, rating, message, photo_url, status, created_at) on table public.feedbacks to anon;
+
+
+-- 3. STATIC CONTENT TABLES SELECT ACCESS
+-- Ensure public/anon role can read services, products, gallery, testimonials, and business settings
+grant select on table public.services to anon, authenticated, service_role;
+grant select on table public.products to anon, authenticated, service_role;
+grant select on table public.gallery to anon, authenticated, service_role;
+grant select on table public.testimonials to anon, authenticated, service_role;
+grant select on table public.business_settings to anon, authenticated, service_role;
+
+
+

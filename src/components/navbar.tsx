@@ -40,7 +40,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-[#FF2D95]/40 ring-offset-2 ring-offset-[#050B1F] group-hover:ring-[#7B2CFF]/60 transition-all duration-300 shadow-lg shadow-[#FF2D95]/20">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.webp"
                   alt="Shiloh Ladies & Kids Beauty Salon Logo"
                   fill
                   className="object-cover"
@@ -134,7 +134,7 @@ export default function Navbar() {
             <div className="flex justify-center mb-10">
               <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-[#FF2D95]/40 ring-offset-4 ring-offset-[#050B1F] shadow-2xl shadow-[#FF2D95]/30">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.webp"
                   alt="Shiloh Salon"
                   fill
                   className="object-cover"

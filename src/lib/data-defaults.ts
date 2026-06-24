@@ -312,28 +312,28 @@ export const DEFAULT_PRODUCTS: Product[] = [
     name: "Shiloh Royal Herb Hair Oil",
     description: "Our signature hair growth formulation infused with hibiscus, bringraj, and cold-pressed coconut oil.",
     benefits: ["Stops hair fall within 15 days", "Deeply conditions scalp roots", "Promotes dense black hair growth"],
-    imageUrl: "/images/product.png"
+    imageUrl: "/images/product.webp"
   },
   {
     id: "p2",
     name: "Professional D-Tan Cleanser Pack",
     description: "Salon-grade organic tan removal clay mask formulated with orange peel extracts and tea tree oils.",
     benefits: ["Instantly brightens sun-damaged skin", "Refines pores and removes oiliness", "Soothing cooling sensation"],
-    imageUrl: "/images/product.png"
+    imageUrl: "/images/product.webp"
   },
   {
     id: "p3",
     name: "Silky Smooth Argan Hair Mask",
     description: "Intense moisture repair hair mask rich in Moroccan Argan oil and silk proteins, used in our premium hair spas.",
     benefits: ["Restores damaged, chemically treated hair", "Creates incredible softness", "Long-lasting sweet fragrance"],
-    imageUrl: "/images/product.png"
+    imageUrl: "/images/product.webp"
   },
   {
     id: "p4",
     name: "Luxury Rose Petal Skin Serum",
     description: "Concentrated floral serum containing active hyaluronic acid and distilled rose lipids for glass-like dewy skin.",
     benefits: ["Plumps skin with hydration", "Fades fine lines and dry patches", "Perfect base before applying makeup"],
-    imageUrl: "/images/product.png"
+    imageUrl: "/images/product.webp"
   }
 ];
 

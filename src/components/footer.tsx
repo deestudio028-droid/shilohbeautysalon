@@ -18,7 +18,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-[#FF2D95]/30 ring-offset-2 ring-offset-[#030714] group-hover:ring-[#7B2CFF]/50 transition-all duration-300 shrink-0">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.webp"
                   alt="Shiloh Ladies & Kids Beauty Salon"
                   fill
                   className="object-cover"

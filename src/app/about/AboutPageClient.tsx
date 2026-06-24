@@ -160,11 +160,11 @@ export default function AboutPageClient() {
             >
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-[#FF2D95]/10 group">
                 <Image
-                  src="/images/shop/salon-1.jpg"
+                  src="/images/shop/salon-1.webp"
                   alt="Shiloh Premium Salon Interior"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  sizes="(max-w-768px) 100vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/60 via-transparent to-transparent pointer-events-none" />
@@ -198,11 +198,11 @@ export default function AboutPageClient() {
           >
             <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
               <Image
-                src="/images/shop/salon-2.jpg"
+                src="/images/shop/salon-2.webp"
                 alt="Shiloh Salon Styling Area"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                sizes="(max-w-768px) 100vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-[#7B2CFF]/20 to-transparent pointer-events-none" />
             </div>
@@ -471,11 +471,11 @@ export default function AboutPageClient() {
               className="md:col-span-5 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
             >
               <Image
-                src="/images/shop/salon-3.jpg"
+                src="/images/shop/salon-3.webp"
                 alt="Shiloh Luxury Ambience"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                sizes="(max-w-768px) 100vw, 40vw"
+                sizes="(max-width: 768px) 100vw, 40vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
               <div className="absolute bottom-6 left-6 text-left">
@@ -495,11 +495,11 @@ export default function AboutPageClient() {
                 className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
               >
                 <Image
-                  src="/images/shop/salon-4.jpg"
+                  src="/images/shop/salon-4.webp"
                   alt="Premium Beauty Treatment Zone"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  sizes="(max-w-768px) 100vw, 30vw"
+                  sizes="(max-width: 768px) 100vw, 30vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
                 <div className="absolute bottom-4 left-4 text-left">
@@ -517,11 +517,11 @@ export default function AboutPageClient() {
                 className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
               >
                 <Image
-                  src="/images/shop/salon-5.jpg"
+                  src="/images/shop/salon-5.webp"
                   alt="Bridal Dressing area"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  sizes="(max-w-768px) 100vw, 30vw"
+                  sizes="(max-width: 768px) 100vw, 30vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
                 <div className="absolute bottom-4 left-4 text-left">
@@ -540,11 +540,11 @@ export default function AboutPageClient() {
               className="md:col-span-3 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
             >
               <Image
-                src="/images/shop/salon-6.jpg"
+                src="/images/shop/salon-6.webp"
                 alt="Shiloh Salon Hair Styling Area"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                sizes="(max-w-768px) 100vw, 30vw"
+                sizes="(max-width: 768px) 100vw, 30vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
               <div className="absolute bottom-6 left-6 text-left">
@@ -711,11 +711,11 @@ export default function AboutPageClient() {
           >
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
               <Image
-                src="/images/shop/salon-7.jpg"
+                src="/images/shop/salon-7.webp"
                 alt="Shiloh Salon Skin & Hair Care session"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                sizes="(max-w-768px) 100vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/60 via-transparent to-transparent pointer-events-none" />
             </div>
