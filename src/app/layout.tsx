@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "https://www.shilohbeautysalon.com/favicon.ico",
+        url: "/favicon.ico",
         type: "image/x-icon",
       }
     ]
