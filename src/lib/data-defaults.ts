@@ -40,7 +40,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A classic straight haircut designed for clean, even ends and a polished appearance.",
     duration: "20 mins",
     benefits: ["Eliminates split ends", "Gives a neat, healthy look", "Easy to manage"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h2",
@@ -49,7 +49,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A beautiful, traditional U-shaped haircut adding soft curves and fluid movement to the back.",
     duration: "30 mins",
     benefits: ["Creates natural volume", "Elegant back profile", "Suits all hair lengths"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h3",
@@ -58,7 +58,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Deep V-shaped haircut that tapers down to a point, creating dramatic angles and layers.",
     duration: "30 mins",
     benefits: ["Modern, edgy silhouette", "Lightens thick hair", "Highlights layers"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h4",
@@ -67,7 +67,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A structured layered cut with distinct, visible 'steps' that create amazing bounce and body.",
     duration: "40 mins",
     benefits: ["Adds dramatic volume", "Gives thick appearance", "Perfect for wavy hair"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h5",
@@ -76,7 +76,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Soft, flowing layers tailored to frame your face and complement your natural hair texture.",
     duration: "45 mins",
     benefits: ["Frames the face elegantly", "Reduces heaviness", "Adds movement and bounce"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h6",
@@ -85,7 +85,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Feminine, soft outward layers with feathered ends for a light, breezy, and voluminous feel.",
     duration: "45 mins",
     benefits: ["Soft, romantic texture", "Lightweight styling", "Frames face features beautifully"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h7",
@@ -94,7 +94,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A premium combination styling that merges the structure of step cutting with soft feathered tips.",
     duration: "60 mins",
     benefits: ["Maximum volume and bounce", "High-fashion look", "Reduces split ends"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp"
   },
   {
     id: "h8",
@@ -103,7 +103,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A professional chemical treatment designed to straighten out frizz and leave hair incredibly smooth and soft.",
     duration: "3-4 hours",
     benefits: ["Eliminates frizz entirely", "Creates a silky, shiny finish", "Reduces daily styling time"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.webp"
   },
   {
     id: "h9",
@@ -112,7 +112,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Permanent thermal straightening for pin-straight, ultra-sleek, and glass-like hair.",
     duration: "3-4 hours",
     benefits: ["Permanent pin-straight result", "High glossy reflection", "Sleek, sophisticated look"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.webp"
   },
   {
     id: "h10",
@@ -121,7 +121,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Deep conditioning and massage treatment to revive dry, damaged hair and nourish the scalp.",
     duration: "45-60 mins",
     benefits: ["Deeply hydrates hair shafts", "Reduces hair fall", "Relieves stress and relaxes"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.webp"
   },
   {
     id: "h11",
@@ -130,7 +130,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Luxury wash and professional blow-out for bouncy curls or sleek straight styles.",
     duration: "30 mins",
     benefits: ["Instant volume", "Professional setting", "Glamorous finish"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.webp"
   },
 
   // SKIN CARE
@@ -141,7 +141,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Precise thread work to shape and clean the eyebrow arches for a sharp facial framing.",
     duration: "10 mins",
     benefits: ["Perfect symmetrical arches", "Removes finest hair from roots", "Longer-lasting than shaving"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.webp"
   },
   {
     id: "s2",
@@ -150,7 +150,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Premium bleaching treatment with gold particles to lighten facial hair and brighten skin tone.",
     duration: "25 mins",
     benefits: ["Lightens facial hair evenly", "Restores golden radiance", "Deep cleanses pores"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.webp"
   },
   {
     id: "s3",
@@ -159,7 +159,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Nourishing facial utilizing goat milk extracts rich in lactic acid to exfoliate, hydrate, and soften sensitive skin.",
     duration: "60 mins",
     benefits: ["Gentle, natural exfoliation", "Deep hydration for dry skin", "Soothes sensitive skin types"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp"
   },
   {
     id: "s4",
@@ -168,7 +168,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Brightening facial packed with active Vitamin C antioxidants to target dark spots, sun damage, and uneven skin tone.",
     duration: "60 mins",
     benefits: ["Fades dark spots and pigmentation", "Boosts collagen production", "Reveals radiant, youthful skin"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp"
   },
   {
     id: "s5",
@@ -177,7 +177,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Deep clarifying facial formulated to remove sun tan, dirt, and pollution damage from the skin layers.",
     duration: "50 mins",
     benefits: ["Removes persistent sun tan", "Soothes sunburnt skin", "Restores natural complexion"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp"
   },
   {
     id: "s6",
@@ -186,7 +186,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A royal treatment infused with 24k gold leaf extracts to firm, hydrate, and brighten the skin.",
     duration: "75 mins",
     benefits: ["Improves skin elasticity", "Provides an intense, luminous glow", "Anti-aging properties"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp"
   },
   {
     id: "s7",
@@ -195,7 +195,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Deliciously rich antioxidant facial using cocoa extracts to detoxify skin and combat aging signs.",
     duration: "60 mins",
     benefits: ["Stress-relieving aroma", "Rich in skin-loving antioxidants", "Leaves skin deeply nourished"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp"
   },
 
   // BRIDAL SERVICES
@@ -206,7 +206,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A premium package covering the essential styling requirements for a stunning wedding look.",
     duration: "2-3 hours",
     benefits: ["Bridal Makeup", "Advance Hairdo", "Professional Saree Draping", "Comfortable Contact Lenses", "Volume Eyelashes", "Hair Extensions"],
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (1).jpeg"
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (1).webp"
   },
   {
     id: "b2",
@@ -215,7 +215,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A professional High-Definition bridal setup designed to look flawless under camera flashes and videography.",
     duration: "3 hours",
     benefits: ["HD Bridal Makeup", "HD Advance Hairdo", "Saree Draping", "Hair Extensions", "Lenses & Lashes", "Exquisite Bridal Jewelry Set Styling"],
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM.jpeg"
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM.webp"
   },
   {
     id: "b3",
@@ -224,7 +224,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "An ultra-modern bridal package delivering the coveted glassy, dewy makeup look with complete skin prep.",
     duration: "3.5 hours",
     benefits: ["HD Glass Bridal Makeup", "Premium Hairdo", "Saree Draping", "Hair Extensions", "Lenses & Lashes", "Bridal Jewelry Styling", "Pre-makeup Bridal Facial"],
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (2).jpeg"
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (2).webp"
   },
   {
     id: "b4",
@@ -233,7 +233,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Indulge in royal bridal styling that covers both wedding makeup and traditional bridal arts.",
     duration: "5 hours",
     benefits: ["HD Glass Bridal Makeup", "Premium Hairdo", "Saree Draping", "Hair Extensions", "Lenses & Lashes", "Bridal Jewelry Styling", "Pre-bridal Skin Facial", "Bridal Mehndi (Intricate Henna)"],
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM.jpeg"
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM.webp"
   },
   {
     id: "b5",
@@ -242,7 +242,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "The ultimate head-to-toe styling treatment for the discerning bride wanting absolute luxury.",
     duration: "6 hours",
     benefits: ["HD Glass Bridal Makeup", "Premium Hairdo", "Saree Draping", "Hair Extensions", "Lenses & Lashes", "Bridal Jewelry Styling", "Luxury Bridal Skin Prep Facial", "Full Bridal Hand & Leg Mehndi"],
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM (1).jpeg"
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM (1).webp"
   },
 
   // KIDS SERVICES
@@ -253,7 +253,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "A gentle, quick, and safe haircut designed for babies and toddlers to keep them neat and comfortable.",
     duration: "20 mins",
     benefits: ["Patience-filled stylist handling", "Fun styling chairs", "Kid-safe tools"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.webp"
   },
   {
     id: "k2",
@@ -262,7 +262,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Classic rounded bowl cut for young children, framing the face cutely and easily manageable.",
     duration: "25 mins",
     benefits: ["Adorable classic design", "Easy to wash and style", "Keeps hair out of eyes"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.webp"
   },
 
   // HOME SERVICES
@@ -273,7 +273,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Book our experienced beauticians to visit your residence for complete bridal, skin, or hair makeovers.",
     duration: "Flexible",
     benefits: ["Absolute comfort of home", "Full hygienic setup carried by us", "Perfect for pre-wedding functions"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (1).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (1).webp"
   },
 
   // BEAUTY ACADEMY
@@ -284,7 +284,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Our entry-level professional course covering the fundamentals of skin care, basic haircuts, and threading.",
     duration: "1 Month",
     benefits: ["Hands-on practical training", "Expert mentorship", "Basic certification upon completion"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).webp"
   },
   {
     id: "a2",
@@ -293,7 +293,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Master advanced makeup arts including HD, Glass, Airbrush, and traditional bridal techniques.",
     duration: "2 Months",
     benefits: ["Portfolio creation photoshoot", "Premium makeup kit guidance", "Master Academy Diploma"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).webp"
   },
   {
     id: "a3",
@@ -302,7 +302,7 @@ export const DEFAULT_SERVICES: Service[] = [
     description: "Learn professional pleating, box-folding, and draping techniques to drape any saree in under 5 minutes.",
     duration: "1 Week",
     benefits: ["Draping variations (Gujarati, South Indian)", "Ironing and box-pleating tricks", "Quick draping certification"],
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).jpeg"
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (2).webp"
   }
 ];
 
@@ -342,31 +342,31 @@ export const DEFAULT_GALLERY: GalleryItem[] = [
   {
     id: "g1",
     category: "Bridal Looks",
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (1).jpeg",
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (1).webp",
     title: "Classic Red Bridal Combo Transformation"
   },
   {
     id: "g2",
     category: "Bridal Looks",
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM.jpeg",
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM.webp",
     title: "Stunning HD Bridal Jewelry & Makeup"
   },
   {
     id: "g3",
     category: "Bridal Looks",
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (2).jpeg",
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.31 AM (2).webp",
     title: "Dewy HD Glass Bridal Perfection"
   },
   {
     id: "g4",
     category: "Bridal Looks",
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM.jpeg",
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM.webp",
     title: "Royal Crimson Saree & Bridal Facial Prep"
   },
   {
     id: "g5",
     category: "Bridal Looks",
-    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM (1).jpeg",
+    imageUrl: "/images/bridal/WhatsApp Image 2026-06-24 at 11.08.30 AM (1).webp",
     title: "Imperial Full Mehndi & Makeup Transformation"
   },
   
@@ -374,31 +374,31 @@ export const DEFAULT_GALLERY: GalleryItem[] = [
   {
     id: "g6",
     category: "Hair Transformations",
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).jpeg",
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM (2).webp",
     title: "Professional Haircut Design Menu"
   },
   {
     id: "g7",
     category: "Hair Transformations",
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.jpeg",
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM.webp",
     title: "Hair Coloring & Straightening Options"
   },
   {
     id: "g8",
     category: "Skin Care Results",
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.jpeg",
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.19 AM.webp",
     title: "Custom Facial & Skin Treatment Selection"
   },
   {
     id: "g9",
     category: "Home Service Moments",
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (1).jpeg",
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.20 AM (1).webp",
     title: "Manicure, Pedicure & Massages"
   },
   {
     id: "g10",
     category: "Kids Styling",
-    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.jpeg",
+    imageUrl: "/images/menu/WhatsApp Image 2026-06-24 at 10.53.17 AM.webp",
     title: "Gentle Grooming & Threading Guide"
   }
 ];

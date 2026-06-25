@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Calendar, Phone, Sparkles, Clock, CheckCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Search, Clock, CheckCircle, Sparkles } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Service } from "@/lib/supabase";
@@ -13,7 +12,7 @@ interface ServicesPageClientProps {
 }
 
 export default function ServicesPageClient({ initialServices }: ServicesPageClientProps) {
-  const [allServices, setAllServices] = useState<Service[]>(initialServices);
+  const [allServices] = useState<Service[]>(initialServices);
   const [selectedCategory, setSelectedCategory] = useState<string>("All Services");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -60,43 +59,34 @@ export default function ServicesPageClient({ initialServices }: ServicesPageClie
   });
 
   const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
-  const goldTextGradient = "bg-gradient-to-r from-[#FFD166] to-[#FF7A00] bg-clip-text text-transparent";
 
   return (
     <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white">
-      {/* Background glow effects */}
-      <div className="absolute top-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] pointer-events-none animate-float" />
-      <div className="absolute bottom-[20%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px] pointer-events-none animate-float-delayed" />
+      {/* Background glow effects - Static for GPU efficiency */}
+      <div className="absolute top-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px] pointer-events-none" />
 
       <Navbar />
 
       {/* HEADER SECTION */}
       <section className="relative pt-36 pb-12 border-b border-white/5 overflow-hidden bg-[#040816]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#FFD166]" />
             Royal Rituals
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          </div>
+          <h1
             className="text-4xl sm:text-5xl font-bold font-serif"
           >
             Our Service <span className={logoTextGradient}>Rituals</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          </h1>
+          <p
             className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
           >
             Explore our curated beauty menu. To maintain absolute luxury standards, all pricing is discussed during personalized styling consultations.
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -135,81 +125,73 @@ export default function ServicesPageClient({ initialServices }: ServicesPageClie
         </div>
 
         {/* SERVICE GRID */}
-        <motion.div 
-          layout
+        <div 
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          <AnimatePresence mode="popLayout">
-            {filteredServices.map((service) => (
-              <motion.div
-                layout
-                key={service.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className="glass-card glass-card-hover rounded-2xl overflow-hidden flex flex-col justify-between border border-white/5"
-              >
-                <div className="p-8 space-y-6">
-                  {/* Category & duration banner */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-widest font-semibold text-[#00D4FF] bg-[#00D4FF]/10 px-2.5 py-1 rounded-full">
-                      {service.category}
+          {filteredServices.map((service) => (
+            <div
+              key={service.id}
+              className="glass-card glass-card-hover rounded-2xl overflow-hidden flex flex-col justify-between border border-white/5"
+            >
+              <div className="p-8 space-y-6">
+                {/* Category & duration banner */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-widest font-semibold text-[#00D4FF] bg-[#00D4FF]/10 px-2.5 py-1 rounded-full">
+                    {service.category}
+                  </span>
+                  {service.duration && (
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-gray-600" />
+                      {service.duration}
                     </span>
-                    {service.duration && (
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-gray-600" />
-                        {service.duration}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Header Title */}
-                  <h3 className="text-xl font-bold font-serif text-white">{service.name}</h3>
-                  
-                  {/* Description */}
-                  <p className="text-gray-300 font-light text-sm leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Benefits */}
-                  {service.benefits && service.benefits.length > 0 && (
-                    <div className="pt-2 border-t border-white/5 space-y-2">
-                      <h4 className="text-xs font-semibold text-[#FFD166] uppercase tracking-widest font-serif flex items-center gap-1.5">
-                        Key Benefits:
-                      </h4>
-                      <ul className="grid grid-cols-1 gap-2">
-                        {service.benefits.map((benefit, i) => (
-                          <li key={i} className="text-xs text-gray-400 flex items-start gap-2">
-                            <CheckCircle className="w-4 h-4 text-[#FF2D95] shrink-0 mt-0.5" />
-                            <span className="leading-normal">{benefit}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
                   )}
                 </div>
 
-                {/* Actions */}
-                <div className="p-8 pt-0 flex gap-4">
-                  <Link
-                    href={`/appointment?service=${encodeURIComponent(service.name)}`}
-                    className="flex-1 text-center py-3 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-tr from-[#FF2D95] to-[#7B2CFF] rounded-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-md shadow-[#FF2D95]/10"
-                  >
-                    Book Now
-                  </Link>
-                  <Link
-                    href={`https://wa.me/919962110080?text=Hi%20Shiloh%20Salon%2C%20I%20would%20like%20to%20enquire%20about%20the%20${encodeURIComponent(service.name)}%20service.`}
-                    target="_blank"
-                    className="flex-1 text-center py-3 text-xs font-semibold uppercase tracking-wider text-white border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-300"
-                  >
-                    Enquire
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                {/* Header Title */}
+                <h3 className="text-xl font-bold font-serif text-white">{service.name}</h3>
+                
+                {/* Description */}
+                <p className="text-gray-300 font-light text-sm leading-relaxed">
+                  {service.description}
+                </p>
+
+                {/* Benefits */}
+                {service.benefits && service.benefits.length > 0 && (
+                  <div className="pt-2 border-t border-white/5 space-y-2">
+                    <h4 className="text-xs font-semibold text-[#FFD166] uppercase tracking-widest font-serif flex items-center gap-1.5">
+                      Key Benefits:
+                    </h4>
+                    <ul className="grid grid-cols-1 gap-2">
+                      {service.benefits.map((benefit, i) => (
+                        <li key={i} className="text-xs text-gray-400 flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-[#FF2D95] shrink-0 mt-0.5" />
+                          <span className="leading-normal">{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="p-8 pt-0 flex gap-4">
+                <Link
+                  href={`/appointment?service=${encodeURIComponent(service.name)}`}
+                  className="flex-1 text-center py-3 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-tr from-[#FF2D95] to-[#7B2CFF] rounded-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-md shadow-[#FF2D95]/10"
+                >
+                  Book Now
+                </Link>
+                <Link
+                  href={`https://wa.me/919962110080?text=Hi%20Shiloh%20Salon%2C%20I%20would%20like%20to%20enquire%20about%20the%20${encodeURIComponent(service.name)}%20service.`}
+                  target="_blank"
+                  className="flex-1 text-center py-3 text-xs font-semibold uppercase tracking-wider text-white border border-white/10 rounded-xl hover:bg-white/5 transition-all duration-300"
+                >
+                  Enquire
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* EMPTY STATE */}
         {filteredServices.length === 0 && (

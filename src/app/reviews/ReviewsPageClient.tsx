@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Sparkles, Search, MessageSquare, StarHalf, ArrowLeft } from "lucide-react";
-import { motion } from "framer-motion";
+import { Star, Sparkles, Search, MessageSquare, StarHalf } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Feedback } from "@/lib/supabase";
@@ -14,7 +13,7 @@ interface ReviewsPageClientProps {
 }
 
 export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientProps) {
-  const [reviews, setReviews] = useState<Feedback[]>(initialReviews);
+  const [reviews] = useState<Feedback[]>(initialReviews);
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState("All");
 
@@ -46,30 +45,22 @@ export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientP
       {/* HEADER SECTION */}
       <section className="relative pt-36 pb-12 border-b border-white/5 overflow-hidden bg-[#040816]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+          <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
           >
             <Star className="w-3.5 h-3.5 text-[#FFD166] fill-[#FFD166]" />
             Client Testimonials
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          </div>
+          <h1
             className="text-4xl sm:text-5xl font-bold font-serif"
           >
             Customer <span className={logoTextGradient}>Reviews</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          </h1>
+          <p
             className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
           >
             See what our clients say about their pampering sessions at Shiloh. We are proud of our verified client feedback.
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -203,6 +194,7 @@ export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientP
                           fill
                           sizes="(max-width: 768px) 100vw, 33vw"
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
                         />
                       </div>
                     )}

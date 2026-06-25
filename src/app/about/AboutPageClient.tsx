@@ -6,21 +6,14 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import {
   Sparkles,
-  Heart,
   Award,
   Users,
   Star,
-  ShieldCheck,
-  ThumbsUp,
-  Scissors,
-  Gem,
   Check,
-  ArrowRight,
-  Phone,
   Calendar,
   Clock,
-  MapPin,
-  MessageSquare
+  Gem,
+  Scissors
 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -53,10 +46,10 @@ export default function AboutPageClient() {
   const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
   const goldTextGradient = "bg-gradient-to-r from-[#FFD166] to-[#FF7A00] bg-clip-text text-transparent";
 
-  // Animation variants
+  // Animation variants (retained only for the Hero entrance)
   const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   const staggerContainer = {
@@ -64,7 +57,7 @@ export default function AboutPageClient() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
+        staggerChildren: 0.08
       }
     }
   };
@@ -75,9 +68,9 @@ export default function AboutPageClient() {
 
       {/* SECTION 1 — PREMIUM HERO */}
       <section className="relative pt-36 pb-20 border-b border-white/5 bg-[#040816]/60 overflow-hidden">
-        {/* Background glow effects */}
-        <div className="absolute top-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#00D4FF]/5 blur-[120px] pointer-events-none animate-pulse duration-[8000ms]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#FF2D95]/5 blur-[120px] pointer-events-none animate-pulse duration-[10000ms]" />
+        {/* Background glow effects - Static for rendering speed */}
+        <div className="absolute top-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#00D4FF]/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#FF2D95]/5 blur-[120px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -137,7 +130,7 @@ export default function AboutPageClient() {
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-4">
                 <Link
                   href="/appointment"
-                  className="px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full hover:scale-105 active:scale-95 shadow-lg shadow-[#FF2D95]/20 hover:shadow-[#7B2CFF]/40 transition-all duration-300 glow-pink"
+                  className="px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full hover:scale-105 active:scale-95 shadow-lg shadow-[#FF2D95]/20 hover:shadow-[#7B2CFF]/40 transition-all duration-300"
                 >
                   Book Appointment
                 </Link>
@@ -155,10 +148,10 @@ export default function AboutPageClient() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="lg:col-span-5 relative"
             >
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-[#FF2D95]/10 group">
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-lg shadow-[#FF2D95]/5 group">
                 <Image
                   src="/images/shop/salon-1.webp"
                   alt="Shiloh Premium Salon Interior"
@@ -185,37 +178,26 @@ export default function AboutPageClient() {
         </div>
       </section>
 
-      {/* SECTION 2 — OUR STORY */}
+      {/* SECTION 2 — OUR STORY (Static for performance) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 border-b border-white/5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left image */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="lg:col-span-5 order-2 lg:order-1"
-          >
-            <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
+          <div className="lg:col-span-5 order-2 lg:order-1">
+            <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-lg group">
               <Image
                 src="/images/shop/salon-2.webp"
                 alt="Shiloh Salon Styling Area"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-[#7B2CFF]/20 to-transparent pointer-events-none" />
             </div>
-          </motion.div>
+          </div>
 
           {/* Right story */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="lg:col-span-7 space-y-6 text-left order-1 lg:order-2"
-          >
+          <div className="lg:col-span-7 space-y-6 text-left order-1 lg:order-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7B2CFF]/10 border border-[#7B2CFF]/20 text-xs tracking-wider uppercase font-semibold text-[#a074ff]">
               Our Heritage
             </div>
@@ -233,20 +215,14 @@ export default function AboutPageClient() {
                 Serving families since 2018, we take pride in our strict hygiene protocols and transparent pricing. At Shiloh, we make every salon session feel like an indulgent beauty retreat.
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 3 — MEET OUR FOUNDER */}
+      {/* SECTION 3 — MEET OUR FOUNDER (Static for performance) */}
       <section className="py-24 bg-[#040816]/40 border-b border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-12">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="max-w-xl mx-auto space-y-3"
-          >
+          <div className="max-w-xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF2D95]/10 border border-[#FF2D95]/20 text-xs tracking-wider uppercase font-semibold text-[#FF2D95]">
               The Visionary
             </div>
@@ -256,18 +232,12 @@ export default function AboutPageClient() {
             <p className="text-gray-400 font-light text-sm">
               Blending advanced skills, luxury aesthetics, and client-centric dedication.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-5xl mx-auto">
-            {/* Left: Avatar placeholder */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="lg:col-span-5 flex justify-center"
-            >
-              <div className="relative p-2 rounded-full border border-white/10 bg-[#050B1F]/60 backdrop-blur-md shadow-2xl">
+            {/* Left: Avatar */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative p-2 rounded-full border border-white/10 bg-[#050B1F]/60 backdrop-blur-md shadow-lg">
                 <div className="relative w-56 h-56 rounded-full overflow-hidden border-2 border-[#FFD166]/40 p-1 bg-gradient-to-tr from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF]">
                   <div className="w-full h-full rounded-full bg-[#050B1F] relative overflow-hidden group">
                     <Image
@@ -276,25 +246,20 @@ export default function AboutPageClient() {
                       fill
                       sizes="224px"
                       className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
                     />
                   </div>
                 </div>
 
                 {/* Overlaid Badges */}
-                <div className="absolute -bottom-2 -right-4 px-3.5 py-1.5 rounded-xl bg-[#050B1F] border border-[#FFD166]/30 text-[10px] font-bold text-[#FFD166] uppercase shadow-lg font-serif">
+                <div className="absolute -bottom-2 -right-4 px-3.5 py-1.5 rounded-xl bg-[#050B1F] border border-[#FFD166]/30 text-[10px] font-bold text-[#FFD166] uppercase shadow-md font-serif">
                   Lead Stylist &amp; Founder
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Right: Bio Details */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="lg:col-span-7 text-left space-y-6"
-            >
+            <div className="lg:col-span-7 text-left space-y-6">
               <div className="space-y-2">
                 <h3 className="text-2xl font-bold font-serif text-[#FFD166]">Shiloh Founder &amp; Lead Stylist</h3>
                 <p className="text-[#00D4FF] text-xs font-semibold uppercase tracking-wider">Founder and Lead Beauty Professional</p>
@@ -338,12 +303,12 @@ export default function AboutPageClient() {
                   <p className="text-[9px] uppercase tracking-wider text-gray-400 font-medium">Trusted Brand</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 4 — SALON EXPERIENCE */}
+      {/* SECTION 4 — SALON EXPERIENCE (Static for performance) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 border-b border-white/5">
         <div className="text-center space-y-3 mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/20 text-xs tracking-wider uppercase font-semibold text-[#00D4FF]">
@@ -357,16 +322,9 @@ export default function AboutPageClient() {
           </p>
         </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Bridal */}
-          <motion.div
-            variants={fadeInUp}
+          <div
             className="glass-card p-8 rounded-3xl border border-white/5 relative group hover:border-[#FF2D95]/40 transition-all duration-500 overflow-hidden flex flex-col justify-between"
           >
             <div className="space-y-6">
@@ -389,11 +347,10 @@ export default function AboutPageClient() {
               </ul>
             </div>
             <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#FF2D95] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </motion.div>
+          </div>
 
           {/* Card 2: Hair Care */}
-          <motion.div
-            variants={fadeInUp}
+          <div
             className="glass-card p-8 rounded-3xl border border-white/5 relative group hover:border-[#7B2CFF]/40 transition-all duration-500 overflow-hidden flex flex-col justify-between"
           >
             <div className="space-y-6">
@@ -416,11 +373,10 @@ export default function AboutPageClient() {
               </ul>
             </div>
             <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#7B2CFF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </motion.div>
+          </div>
 
           {/* Card 3: Skin Care */}
-          <motion.div
-            variants={fadeInUp}
+          <div
             className="glass-card p-8 rounded-3xl border border-white/5 relative group hover:border-[#00D4FF]/40 transition-all duration-500 overflow-hidden flex flex-col justify-between"
           >
             <div className="space-y-6">
@@ -443,11 +399,11 @@ export default function AboutPageClient() {
               </ul>
             </div>
             <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#00D4FF] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 5 — INSIDE SHILOH */}
+      {/* SECTION 5 — INSIDE SHILOH (Static for performance) */}
       <section className="py-24 bg-[#040816]/30 border-b border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-12">
           <div className="space-y-3">
@@ -465,12 +421,8 @@ export default function AboutPageClient() {
           {/* Premium Masonry Layout using 4 shop images */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
             {/* Large Featured Image (Grid span 5) */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="md:col-span-5 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
+            <div
+              className="md:col-span-5 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-md"
             >
               <Image
                 src="/images/shop/salon-3.webp"
@@ -478,23 +430,20 @@ export default function AboutPageClient() {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 40vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
               <div className="absolute bottom-6 left-6 text-left">
                 <span className="px-3 py-1 text-[10px] uppercase font-bold tracking-widest bg-gradient-to-r from-[#FF2D95] to-[#7B2CFF] rounded-full text-white">Luxury Ambience</span>
                 <h4 className="text-lg font-serif font-bold text-white mt-2">Elegant Decor</h4>
               </div>
-            </motion.div>
+            </div>
 
             {/* Stacked Images Column (Grid span 4) */}
             <div className="md:col-span-4 flex flex-col gap-6">
               {/* Stacked Image 1 */}
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
+              <div
+                className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-md"
               >
                 <Image
                   src="/images/shop/salon-4.webp"
@@ -502,21 +451,18 @@ export default function AboutPageClient() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   sizes="(max-width: 768px) 100vw, 30vw"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
                 <div className="absolute bottom-4 left-4 text-left">
                   <span className="px-2.5 py-0.5 text-[9px] uppercase font-bold tracking-widest bg-white/10 border border-white/10 rounded-full text-white">Premium Beauty Care</span>
                   <h4 className="text-sm font-serif font-bold text-white mt-1">Facial &amp; Skin Care Room</h4>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Stacked Image 2 */}
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
+              <div
+                className="relative flex-1 min-h-[190px] rounded-3xl overflow-hidden border border-white/10 group shadow-md"
               >
                 <Image
                   src="/images/shop/salon-5.webp"
@@ -524,22 +470,19 @@ export default function AboutPageClient() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   sizes="(max-width: 768px) 100vw, 30vw"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
                 <div className="absolute bottom-4 left-4 text-left">
                   <span className="px-2.5 py-0.5 text-[9px] uppercase font-bold tracking-widest bg-white/10 border border-white/10 rounded-full text-white">Bridal Studio</span>
                   <h4 className="text-sm font-serif font-bold text-white mt-1">Makeup Vanity</h4>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* Wide Featured Image (Grid span 3) */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="md:col-span-3 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-lg"
+            <div
+              className="md:col-span-3 relative min-h-[400px] rounded-3xl overflow-hidden border border-white/10 group shadow-md"
             >
               <Image
                 src="/images/shop/salon-6.webp"
@@ -547,13 +490,14 @@ export default function AboutPageClient() {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 30vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/80 via-transparent to-transparent opacity-60 group-hover:opacity-75 transition-opacity" />
               <div className="absolute bottom-6 left-6 text-left">
                 <span className="px-3 py-1 text-[10px] uppercase font-bold tracking-widest bg-[#7B2CFF] rounded-full text-white">Professional Services</span>
                 <h4 className="text-lg font-serif font-bold text-white mt-2">Styling Lounges</h4>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Ambience CTA */}
@@ -573,7 +517,7 @@ export default function AboutPageClient() {
         </div>
       </section>
 
-      {/* SECTION 6 — WHY CUSTOMERS LOVE US */}
+      {/* SECTION 6 — WHY CUSTOMERS LOVE US (Static for performance) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 border-b border-white/5">
         <div className="text-center space-y-3 mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD166]/10 border border-[#FFD166]/20 text-xs tracking-wider uppercase font-semibold text-[#FFD166]">
@@ -614,15 +558,11 @@ export default function AboutPageClient() {
         </div>
       </section>
 
-      {/* SECTION 7 — MISSION & VISION */}
+      {/* SECTION 7 — MISSION & VISION (Static for performance) */}
       <section className="py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 border-b border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Mission */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
+          <div
             className="p-8 sm:p-10 rounded-3xl bg-[#040816]/40 border border-white/10 relative overflow-hidden group hover:border-[#FF2D95]/30 transition-all duration-300"
           >
             <div className="w-12 h-12 rounded-2xl bg-[#FF2D95]/10 border border-[#FF2D95]/20 flex items-center justify-center text-[#FF2D95] mb-6">
@@ -633,14 +573,10 @@ export default function AboutPageClient() {
               To empower women and their children by providing customized, premium beauty therapies that build confidence, repair skin barrier health, and nourish the body. We pledge to utilize only certified chemical-free, organic, and luxury salon products.
             </p>
             <div className="absolute inset-0 border border-transparent group-hover:border-[#FF2D95]/20 rounded-3xl pointer-events-none" />
-          </motion.div>
+          </div>
 
           {/* Vision */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
+          <div
             className="p-8 sm:p-10 rounded-3xl bg-[#040816]/40 border border-white/10 relative overflow-hidden group hover:border-[#7B2CFF]/30 transition-all duration-300"
           >
             <div className="w-12 h-12 rounded-2xl bg-[#7B2CFF]/10 border border-[#7B2CFF]/20 flex items-center justify-center text-[#7B2CFF] mb-6">
@@ -651,21 +587,15 @@ export default function AboutPageClient() {
               To remain the flagship luxury beauty brand in the region, mentoring the next generation of cosmetologists through our academy while expanding our sterile home-salon dispatch services to serve families far and wide.
             </p>
             <div className="absolute inset-0 border border-transparent group-hover:border-[#7B2CFF]/20 rounded-3xl pointer-events-none" />
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 8 — CUSTOMER FIRST PROMISE */}
+      {/* SECTION 8 — CUSTOMER FIRST PROMISE (Static for performance) */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 border-b border-white/5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Checklist */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="lg:col-span-7 space-y-8"
-          >
+          <div className="lg:col-span-7 space-y-8">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/20 text-xs tracking-wider uppercase font-semibold text-[#00D4FF]">
                 Our Vow
@@ -701,56 +631,39 @@ export default function AboutPageClient() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Image */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="lg:col-span-5"
-          >
-            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
+          <div className="lg:col-span-5">
+            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 shadow-lg group">
               <Image
                 src="/images/shop/salon-7.webp"
                 alt="Shiloh Salon Skin & Hair Care session"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050B1F]/60 via-transparent to-transparent pointer-events-none" />
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 9 — FINAL LUXURY CTA */}
+      {/* SECTION 9 — FINAL LUXURY CTA (Static for performance) */}
       <section className="py-20 relative overflow-hidden bg-[#040816]/80">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#FF2D95]/10 via-[#7B2CFF]/5 to-[#00D4FF]/5 pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="space-y-4"
-          >
+          <div className="space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold font-serif">
               Ready For Your Beauty Transformation?
             </h2>
             <p className="text-gray-300 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
               Book your appointment today and experience the elegance, care, and professionalism that make Shiloh Beauty Salon a trusted choice for families.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="flex flex-wrap items-center justify-center gap-4 pt-2"
-          >
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link
               href="/appointment"
               className="px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full hover:scale-105 transition-transform duration-300 shadow-lg"
@@ -770,7 +683,7 @@ export default function AboutPageClient() {
             >
               Visit Salon
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
