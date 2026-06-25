@@ -63,7 +63,7 @@ export default function AboutPageClient() {
   };
 
   return (
-    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white overflow-x-hidden flex flex-col">
+    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white overflow-x-hidden flex flex-col w-full">
       <Navbar />
 
       {/* SECTION 1 — PREMIUM HERO */}

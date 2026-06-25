@@ -45,7 +45,7 @@ export default function HomePageClient({
     : "0.0";
 
   return (
-    <div className="bg-[#050B1F] min-h-screen relative text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col">
+    <div className="bg-[#050B1F] min-h-screen relative text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col w-full overflow-x-hidden">
       {/* Subtle global background glows - Static (no float animation) */}
       <div className="absolute top-[65%] left-[-8%] w-[40%] h-[40%] rounded-full bg-[#7B2CFF]/6 blur-[180px] pointer-events-none" />
       <div className="absolute top-[85%] right-[-8%] w-[35%] h-[35%] rounded-full bg-[#FF2D95]/5 blur-[180px] pointer-events-none" />

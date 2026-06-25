@@ -61,7 +61,7 @@ export default function ServicesPageClient({ initialServices }: ServicesPageClie
   const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
 
   return (
-    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col">
+    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col w-full overflow-x-hidden">
       {/* Background glow effects - Static for GPU efficiency */}
       <div className="absolute top-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[20%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px] pointer-events-none" />
