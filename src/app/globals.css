@@ -130,6 +130,11 @@ html, body {
   padding: 0;
 }
 
+/* Override min-h-screen to use dvh for proper mobile browser layout compatibility */
+.min-h-screen {
+  min-height: 100dvh !important;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-playfair), serif;
 }

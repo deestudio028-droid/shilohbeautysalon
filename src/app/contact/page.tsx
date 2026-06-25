@@ -13,8 +13,10 @@ export default function ContactPage() {
   return (
     <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col w-full overflow-x-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#00D4FF]/5 blur-[150px] pointer-events-none animate-float" />
-      <div className="absolute bottom-[25%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] pointer-events-none animate-float-delayed" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#00D4FF]/5 blur-[150px] animate-float" />
+        <div className="absolute bottom-[25%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] animate-float-delayed" />
+      </div>
 
       <Navbar />
 

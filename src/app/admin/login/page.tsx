@@ -50,13 +50,13 @@ export default function AdminLoginPage() {
     }
   };
 
-  const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
-
   return (
-    <div className="bg-[#050B1F] min-h-screen text-white font-sans flex items-center justify-center p-4 relative selection:bg-[#FF2D95] selection:text-white">
+    <div className="bg-[#050B1F] min-h-screen text-white font-sans flex items-center justify-center p-4 relative selection:bg-[#FF2D95] selection:text-white w-full overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-[20%] left-[20%] w-[35%] h-[35%] rounded-full bg-[#7B2CFF]/10 blur-[150px] pointer-events-none animate-float" />
-      <div className="absolute bottom-[20%] right-[20%] w-[35%] h-[35%] rounded-full bg-[#FF2D95]/10 blur-[150px] pointer-events-none animate-float-delayed" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[20%] left-[20%] w-[35%] h-[35%] rounded-full bg-[#7B2CFF]/10 blur-[150px] animate-float" />
+        <div className="absolute bottom-[20%] right-[20%] w-[35%] h-[35%] rounded-full bg-[#FF2D95]/10 blur-[150px] animate-float-delayed" />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}

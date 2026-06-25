@@ -19,8 +19,10 @@ export default function ProductsPageClient({ initialProducts }: ProductsPageClie
   return (
     <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col w-full overflow-x-hidden">
       {/* Background glow effects - Static for max efficiency */}
-      <div className="absolute top-[10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-[#00D4FF]/5 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[20%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px] pointer-events-none" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-[#00D4FF]/5 blur-[150px]" />
+        <div className="absolute bottom-[20%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px]" />
+      </div>
 
       <Navbar />
 
