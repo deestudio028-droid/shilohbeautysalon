@@ -75,7 +75,7 @@ export default function TransformationsPageClient({ initialGallery }: Transforma
   const goldTextGradient = "bg-gradient-to-r from-[#FFD166] to-[#FF7A00] bg-clip-text text-transparent";
 
   return (
-    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white">
+    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col">
       {/* Background glow effects - Static */}
       <div className="absolute top-[10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-[#7B2CFF]/5 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#FF2D95]/5 blur-[150px] pointer-events-none" />

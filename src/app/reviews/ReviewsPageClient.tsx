@@ -39,7 +39,7 @@ export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientP
   const goldTextGradient = "bg-gradient-to-r from-[#FFD166] to-[#FF7A00] bg-clip-text text-transparent";
 
   return (
-    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white">
+    <div className="bg-[#050B1F] min-h-screen text-white font-sans selection:bg-[#FF2D95] selection:text-white flex flex-col">
       <Navbar />
 
       {/* HEADER SECTION */}
