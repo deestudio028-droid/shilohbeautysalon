@@ -69,6 +69,25 @@ export interface Feedback {
   created_at: string;
 }
 
+export const mapGalleryItem = (item: Record<string, unknown>): GalleryItem => ({
+  id: item.id as string,
+  category: (item.category as string) || "",
+  imageUrl: (item.image_url as string) || "",
+  title: (item.title as string) || "",
+});
+
+export const mapFeedback = (item: Record<string, unknown>): Feedback => ({
+  id: item.id as string,
+  customer_name: item.customer_name as string,
+  phone_number: (item.phone_number as string) || "",
+  service_name: item.service_name as string,
+  rating: item.rating as number,
+  message: item.message as string,
+  photo_url: (item.photo_url as string) || undefined,
+  status: item.status as Feedback["status"],
+  created_at: item.created_at as string,
+});
+
 
 
 // Helpers for LocalStorage
@@ -254,15 +273,15 @@ export const db = {
   // GALLERY / TRANSFORMATIONS
   async getGallery(): Promise<GalleryItem[]> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.from("gallery").select("*").order("created_at", { ascending: false });
-      if (!error && data) {
-        return data.map((item: any) => ({
-          id: item.id,
-          category: item.category,
-          imageUrl: item.image_url || "",
-          title: item.title || ""
-        }));
+      const { data, error } = await supabase
+        .from("gallery")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) {
+        console.error("Supabase getGallery error:", error);
+        throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
       }
+      return (data || []).map((item) => mapGalleryItem(item as Record<string, unknown>));
     }
     return getLocal<GalleryItem[]>(LOCAL_STORAGE_KEYS.GALLERY, DEFAULT_GALLERY);
   },
@@ -277,12 +296,7 @@ export const db = {
       };
       const { data, error } = await supabase.from("gallery").insert([dbPayload]).select().single();
       if (!error && data) {
-        return {
-          id: data.id,
-          category: data.category,
-          imageUrl: data.image_url || "",
-          title: data.title || ""
-        };
+        return mapGalleryItem(data as Record<string, unknown>);
       }
     }
     const gallery = await this.getGallery();
@@ -524,34 +538,31 @@ export const db = {
   },
 
   // FEEDBACKS
-  async getFeedbacks(): Promise<Feedback[]> {
+  async getFeedbacks(options?: { approvedOnly?: boolean }): Promise<Feedback[]> {
     if (isSupabaseConfigured && supabase) {
       const { data: { user } } = await supabase.auth.getUser();
-      const selectQuery = user 
-        ? "*" 
-        : "id, customer_name, service_name, rating, message, photo_url, status, created_at";
 
-      const { data, error } = await supabase
-        .from("feedbacks")
-        .select(selectQuery)
-        .order("created_at", { ascending: false });
+      const baseQuery = user
+        ? supabase.from("feedbacks").select("*")
+        : supabase
+            .from("feedbacks")
+            .select("id, customer_name, service_name, rating, message, photo_url, status, created_at");
+
+      const { data, error } = await (options?.approvedOnly
+        ? baseQuery.eq("status", "Approved")
+        : baseQuery
+      ).order("created_at", { ascending: false });
+
       if (error) {
         console.error("Supabase getFeedbacks error:", error);
         throw new Error(`Database SELECT failed: ${error.message} (Code: ${error.code})`);
       }
-      return data ? (data as any[]).map((item: any) => ({
-        id: item.id,
-        customer_name: item.customer_name,
-        phone_number: item.phone_number || "",
-        service_name: item.service_name,
-        rating: item.rating,
-        message: item.message,
-        photo_url: item.photo_url || undefined,
-        status: item.status,
-        created_at: item.created_at
-      })) : [];
+      return (data || []).map((item) => mapFeedback(item as Record<string, unknown>));
     }
-    return getLocal<Feedback[]>(LOCAL_STORAGE_KEYS.FEEDBACKS, []);
+    const feedbacks = getLocal<Feedback[]>(LOCAL_STORAGE_KEYS.FEEDBACKS, []);
+    return options?.approvedOnly
+      ? feedbacks.filter((f) => f.status === "Approved")
+      : feedbacks;
   },
 
   async addFeedback(feedback: Omit<Feedback, "id" | "status" | "created_at">): Promise<Feedback> {

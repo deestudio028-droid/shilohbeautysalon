@@ -300,4 +300,27 @@ grant select on table public.testimonials to anon, authenticated, service_role;
 grant select on table public.business_settings to anon, authenticated, service_role;
 
 
+-- =============================================================
+-- Realtime: enable live updates on public pages
+-- =============================================================
+-- Required so anon clients receive UPDATE events when feedback
+-- transitions from Pending/Rejected to Approved (RLS visibility change).
+alter table feedbacks replica identity full;
+alter table gallery replica identity full;
+
+-- Add tables to the Supabase Realtime publication.
+-- Safe to re-run: ignore "already member of publication" if present.
+do $$
+begin
+  alter publication supabase_realtime add table feedbacks;
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table gallery;
+exception
+  when duplicate_object then null;
+end $$;
 

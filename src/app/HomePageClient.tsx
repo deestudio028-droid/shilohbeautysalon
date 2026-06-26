@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { Calendar, Phone } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Service, Product, GalleryItem, Feedback, supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { Service, Product, GalleryItem, Feedback, supabase, isSupabaseConfigured, db, mapFeedback, mapGalleryItem } from "@/lib/supabase";
 
 // Dynamically import heavy sections to optimize bundle size (Navbar + Hero only in initial bundle)
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"), { ssr: true });
@@ -40,6 +40,18 @@ export default function HomePageClient({
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) return;
+
+    let cancelled = false;
+
+    // Refresh from DB on mount so data is current even if SSR was cached
+    Promise.all([
+      db.getGallery().then((items) => {
+        if (!cancelled) setGallery(items.slice(0, 4));
+      }),
+      db.getFeedbacks({ approvedOnly: true }).then((items) => {
+        if (!cancelled) setReviews(items);
+      }),
+    ]).catch((err) => console.error("Homepage data refresh failed:", err));
 
     const channel = supabase.channel("homepage-realtime");
 
@@ -102,41 +114,36 @@ export default function HomePageClient({
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
         if (payload.eventType === "INSERT") {
-          const newItem: GalleryItem = {
-            id: payload.new.id,
-            category: payload.new.category || "",
-            imageUrl: payload.new.image_url || "",
-            title: payload.new.title || ""
-          };
-          setGallery((prev) => [newItem, ...prev].slice(0, 4));
+          const newItem = mapGalleryItem(payload.new as Record<string, unknown>);
+          setGallery((prev) => {
+            if (prev.some((g) => g.id === newItem.id)) return prev;
+            return [newItem, ...prev].slice(0, 4);
+          });
         } else if (payload.eventType === "UPDATE") {
-          const updatedItem: GalleryItem = {
-            id: payload.new.id,
-            category: payload.new.category || "",
-            imageUrl: payload.new.image_url || "",
-            title: payload.new.title || ""
-          };
-          setGallery((prev) => prev.map((g) => (g.id === payload.new.id ? updatedItem : g)));
+          const updatedItem = mapGalleryItem(payload.new as Record<string, unknown>);
+          setGallery((prev) => prev.map((g) => (g.id === updatedItem.id ? updatedItem : g)));
         } else if (payload.eventType === "DELETE") {
           setGallery((prev) => prev.filter((g) => g.id !== payload.old.id));
         }
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
         if (payload.eventType === "INSERT") {
-          const newItem = payload.new as Feedback;
+          const newItem = mapFeedback(payload.new as Record<string, unknown>);
           if (newItem.status === "Approved") {
-            setReviews((prev) => [newItem, ...prev]);
+            setReviews((prev) => {
+              if (prev.some((r) => r.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
           }
         } else if (payload.eventType === "UPDATE") {
-          const updatedItem = payload.new as Feedback;
+          const updatedItem = mapFeedback(payload.new as Record<string, unknown>);
           if (updatedItem.status === "Approved") {
             setReviews((prev) => {
               const exists = prev.some((r) => r.id === updatedItem.id);
               if (exists) {
                 return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
-              } else {
-                return [updatedItem, ...prev];
               }
+              return [updatedItem, ...prev];
             });
           } else {
             setReviews((prev) => prev.filter((r) => r.id !== updatedItem.id));
@@ -148,6 +155,7 @@ export default function HomePageClient({
       .subscribe();
 
     return () => {
+      cancelled = true;
       if (supabase) {
         supabase.removeChannel(channel);
       }

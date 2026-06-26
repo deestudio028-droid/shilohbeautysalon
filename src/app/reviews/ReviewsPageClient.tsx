@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Star, Sparkles, Search, MessageSquare, StarHalf } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Feedback, supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { Feedback, supabase, isSupabaseConfigured, db, mapFeedback } from "@/lib/supabase";
 
 interface ReviewsPageClientProps {
   initialReviews: Feedback[];
@@ -18,24 +18,34 @@ export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientP
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) return;
 
+    let cancelled = false;
+
+    db.getFeedbacks({ approvedOnly: true })
+      .then((items) => {
+        if (!cancelled) setReviews(items);
+      })
+      .catch((err) => console.error("Reviews data refresh failed:", err));
+
     const channel = supabase
       .channel("feedbacks-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
         if (payload.eventType === "INSERT") {
-          const newItem = payload.new as Feedback;
+          const newItem = mapFeedback(payload.new as Record<string, unknown>);
           if (newItem.status === "Approved") {
-            setReviews((prev) => [newItem, ...prev]);
+            setReviews((prev) => {
+              if (prev.some((r) => r.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
           }
         } else if (payload.eventType === "UPDATE") {
-          const updatedItem = payload.new as Feedback;
+          const updatedItem = mapFeedback(payload.new as Record<string, unknown>);
           if (updatedItem.status === "Approved") {
             setReviews((prev) => {
               const exists = prev.some((r) => r.id === updatedItem.id);
               if (exists) {
                 return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
-              } else {
-                return [updatedItem, ...prev];
               }
+              return [updatedItem, ...prev];
             });
           } else {
             // If updated to Pending/Rejected, remove it from public reviews
@@ -48,6 +58,7 @@ export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientP
       .subscribe();
 
     return () => {
+      cancelled = true;
       if (supabase) {
         supabase.removeChannel(channel);
       }
