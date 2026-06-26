@@ -1,19 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Star, Sparkles, Search, MessageSquare, StarHalf } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Feedback } from "@/lib/supabase";
+import { Feedback, supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface ReviewsPageClientProps {
   initialReviews: Feedback[];
 }
 
 export default function ReviewsPageClient({ initialReviews }: ReviewsPageClientProps) {
-  const [reviews] = useState<Feedback[]>(initialReviews);
+  const [reviews, setReviews] = useState<Feedback[]>(initialReviews);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const channel = supabase
+      .channel("feedbacks-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem = payload.new as Feedback;
+          if (newItem.status === "Approved") {
+            setReviews((prev) => [newItem, ...prev]);
+          }
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem = payload.new as Feedback;
+          if (updatedItem.status === "Approved") {
+            setReviews((prev) => {
+              const exists = prev.some((r) => r.id === updatedItem.id);
+              if (exists) {
+                return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
+              } else {
+                return [updatedItem, ...prev];
+              }
+            });
+          } else {
+            // If updated to Pending/Rejected, remove it from public reviews
+            setReviews((prev) => prev.filter((r) => r.id !== updatedItem.id));
+          }
+        } else if (payload.eventType === "DELETE") {
+          setReviews((prev) => prev.filter((r) => r.id !== payload.old.id));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState("All");
 

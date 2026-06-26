@@ -6,14 +6,49 @@ import { Sparkles, Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { GalleryItem } from "@/lib/supabase";
+import { GalleryItem, supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface TransformationsPageClientProps {
   initialGallery: GalleryItem[];
 }
 
 export default function TransformationsPageClient({ initialGallery }: TransformationsPageClientProps) {
-  const [galleryItems] = useState<GalleryItem[]>(initialGallery);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(initialGallery);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const channel = supabase
+      .channel("gallery-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem: GalleryItem = {
+            id: payload.new.id,
+            category: payload.new.category || "",
+            imageUrl: payload.new.image_url || "",
+            title: payload.new.title || ""
+          };
+          setGalleryItems((prev) => [newItem, ...prev]);
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem: GalleryItem = {
+            id: payload.new.id,
+            category: payload.new.category || "",
+            imageUrl: payload.new.image_url || "",
+            title: payload.new.title || ""
+          };
+          setGalleryItems((prev) => prev.map((g) => (g.id === payload.new.id ? updatedItem : g)));
+        } else if (payload.eventType === "DELETE") {
+          setGalleryItems((prev) => prev.filter((g) => g.id !== payload.old.id));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [activeLightboxIdx, setActiveLightboxIdx] = useState<number | null>(null);
 

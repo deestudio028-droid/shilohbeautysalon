@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -7,7 +8,7 @@ import { motion } from "framer-motion";
 import { Calendar, Phone } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Service, Product, GalleryItem, Feedback } from "@/lib/supabase";
+import { Service, Product, GalleryItem, Feedback, supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 // Dynamically import heavy sections to optimize bundle size (Navbar + Hero only in initial bundle)
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"), { ssr: true });
@@ -32,10 +33,126 @@ export default function HomePageClient({
   initialGallery,
   initialReviews
 }: HomePageClientProps) {
-  const featuredServices = initialServices;
-  const products = initialProducts;
-  const gallery = initialGallery;
-  const reviews = initialReviews;
+  const [featuredServices, setFeaturedServices] = useState<Service[]>(initialServices);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [gallery, setGallery] = useState<GalleryItem[]>(initialGallery);
+  const [reviews, setReviews] = useState<Feedback[]>(initialReviews);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const channel = supabase.channel("homepage-realtime");
+
+    channel
+      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem: Service = {
+            id: payload.new.id,
+            name: payload.new.name,
+            category: payload.new.category || "",
+            description: payload.new.description || "",
+            duration: payload.new.duration || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          if (newItem.category !== "Bridal Services") {
+            setFeaturedServices((prev) => [newItem, ...prev].slice(0, 4));
+          }
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem: Service = {
+            id: payload.new.id,
+            name: payload.new.name,
+            category: payload.new.category || "",
+            description: payload.new.description || "",
+            duration: payload.new.duration || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          if (updatedItem.category === "Bridal Services") {
+            setFeaturedServices((prev) => prev.filter((s) => s.id !== updatedItem.id));
+          } else {
+            setFeaturedServices((prev) => prev.map((s) => (s.id === payload.new.id ? updatedItem : s)));
+          }
+        } else if (payload.eventType === "DELETE") {
+          setFeaturedServices((prev) => prev.filter((s) => s.id !== payload.old.id));
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem: Product = {
+            id: payload.new.id,
+            name: payload.new.name,
+            description: payload.new.description || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          setProducts((prev) => [newItem, ...prev].slice(0, 4));
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem: Product = {
+            id: payload.new.id,
+            name: payload.new.name,
+            description: payload.new.description || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          setProducts((prev) => prev.map((p) => (p.id === payload.new.id ? updatedItem : p)));
+        } else if (payload.eventType === "DELETE") {
+          setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem: GalleryItem = {
+            id: payload.new.id,
+            category: payload.new.category || "",
+            imageUrl: payload.new.image_url || "",
+            title: payload.new.title || ""
+          };
+          setGallery((prev) => [newItem, ...prev].slice(0, 4));
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem: GalleryItem = {
+            id: payload.new.id,
+            category: payload.new.category || "",
+            imageUrl: payload.new.image_url || "",
+            title: payload.new.title || ""
+          };
+          setGallery((prev) => prev.map((g) => (g.id === payload.new.id ? updatedItem : g)));
+        } else if (payload.eventType === "DELETE") {
+          setGallery((prev) => prev.filter((g) => g.id !== payload.old.id));
+        }
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem = payload.new as Feedback;
+          if (newItem.status === "Approved") {
+            setReviews((prev) => [newItem, ...prev]);
+          }
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem = payload.new as Feedback;
+          if (updatedItem.status === "Approved") {
+            setReviews((prev) => {
+              const exists = prev.some((r) => r.id === updatedItem.id);
+              if (exists) {
+                return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
+              } else {
+                return [updatedItem, ...prev];
+              }
+            });
+          } else {
+            setReviews((prev) => prev.filter((r) => r.id !== updatedItem.id));
+          }
+        } else if (payload.eventType === "DELETE") {
+          setReviews((prev) => prev.filter((r) => r.id !== payload.old.id));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, []);
 
   const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
 

@@ -60,7 +60,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               ) : (
                 <Info className="w-5 h-5 text-[#FFD166] shrink-0" />
               )}
-              <span className="flex-1 text-xs leading-relaxed">{t.message}</span>
+              <span className="flex-1 text-xs leading-relaxed whitespace-pre-line">{t.message}</span>
               <button
                 onClick={() => dismiss(t.id)}
                 className="p-1 rounded-lg hover:bg-white/10 text-current opacity-60 hover:opacity-100 transition-opacity"

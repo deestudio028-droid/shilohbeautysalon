@@ -9,7 +9,7 @@ import {
   Star, Home, Search, Filter, Upload, Loader2, ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { db, Appointment, isSupabaseConfigured, Feedback } from "@/lib/supabase";
+import { db, Appointment, isSupabaseConfigured, Feedback, supabase } from "@/lib/supabase";
 import type { Service, Product, GalleryItem, Testimonial } from "@/lib/data-defaults";
 import { ToastProvider, useToast } from "@/components/ui/toast";
 
@@ -62,6 +62,150 @@ function DashboardInner() {
       await loadAllData();
     })();
   }, [router]);
+
+  /* ── Supabase Realtime live updates ── */
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const mapService = (item: any): Service => ({
+      id: item.id,
+      name: item.name,
+      category: item.category,
+      description: item.description || "",
+      duration: item.duration || "",
+      benefits: item.benefits || [],
+      imageUrl: item.image_url || ""
+    });
+
+    const mapProduct = (item: any): Product => ({
+      id: item.id,
+      name: item.name,
+      description: item.description || "",
+      benefits: item.benefits || [],
+      imageUrl: item.image_url || ""
+    });
+
+    const mapGalleryItem = (item: any): GalleryItem => ({
+      id: item.id,
+      category: item.category,
+      imageUrl: item.image_url || "",
+      title: item.title || ""
+    });
+
+    const channel = supabase.channel("admin-dashboard-realtime");
+
+    channel
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "appointments" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = payload.new as Appointment;
+            setAppointments((prev) => {
+              if (prev.some((a) => a.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+            toast(
+              `🌸 New Appointment Received\n\nCustomer: ${newItem.name}\nService: ${newItem.service}\nRef: ${newItem.appointment_reference}`
+            );
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = payload.new as Appointment;
+            setAppointments((prev) =>
+              prev.map((a) => (a.id === updatedItem.id ? updatedItem : a))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setAppointments((prev) => prev.filter((a) => a.id !== payload.old.id));
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "feedbacks" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = payload.new as Feedback;
+            setFeedbacks((prev) => {
+              if (prev.some((f) => f.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = payload.new as Feedback;
+            setFeedbacks((prev) =>
+              prev.map((f) => (f.id === updatedItem.id ? updatedItem : f))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setFeedbacks((prev) => prev.filter((f) => f.id !== payload.old.id));
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "services" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapService(payload.new);
+            setServices((prev) => {
+              if (prev.some((s) => s.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapService(payload.new);
+            setServices((prev) =>
+              prev.map((s) => (s.id === updatedItem.id ? updatedItem : s))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setServices((prev) => prev.filter((s) => s.id !== payload.old.id));
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "products" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapProduct(payload.new);
+            setProducts((prev) => {
+              if (prev.some((p) => p.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapProduct(payload.new);
+            setProducts((prev) =>
+              prev.map((p) => (p.id === updatedItem.id ? updatedItem : p))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "gallery" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapGalleryItem(payload.new);
+            setGallery((prev) => {
+              if (prev.some((g) => g.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapGalleryItem(payload.new);
+            setGallery((prev) =>
+              prev.map((g) => (g.id === updatedItem.id ? updatedItem : g))
+            );
+          } else if (payload.eventType === "DELETE") {
+            setGallery((prev) => prev.filter((g) => g.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [toast]);
 
   /* ── Load all data ── */
   const loadAllData = async () => {

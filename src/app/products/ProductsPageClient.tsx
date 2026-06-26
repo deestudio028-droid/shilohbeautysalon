@@ -1,18 +1,56 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, Phone, ShoppingBag, CheckCircle } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Product } from "@/lib/supabase";
+import { Product, supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface ProductsPageClientProps {
   initialProducts: Product[];
 }
 
 export default function ProductsPageClient({ initialProducts }: ProductsPageClientProps) {
-  const products = initialProducts;
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+
+    const channel = supabase
+      .channel("products-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, (payload) => {
+        if (payload.eventType === "INSERT") {
+          const newItem: Product = {
+            id: payload.new.id,
+            name: payload.new.name,
+            description: payload.new.description || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          setProducts((prev) => [newItem, ...prev]);
+        } else if (payload.eventType === "UPDATE") {
+          const updatedItem: Product = {
+            id: payload.new.id,
+            name: payload.new.name,
+            description: payload.new.description || "",
+            benefits: payload.new.benefits || [],
+            imageUrl: payload.new.image_url || ""
+          };
+          setProducts((prev) => prev.map((p) => (p.id === payload.new.id ? updatedItem : p)));
+        } else if (payload.eventType === "DELETE") {
+          setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+        }
+      })
+      .subscribe();
+
+    return () => {
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, []);
 
   const logoTextGradient = "bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#00D4FF] bg-clip-text text-transparent";
 
