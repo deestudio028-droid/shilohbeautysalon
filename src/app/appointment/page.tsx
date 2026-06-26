@@ -370,7 +370,10 @@ function AppointmentForm() {
                   required
                   value={date}
                   min={minDate}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    setTime("");
+                  }}
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-[#FF2D95] focus:bg-white/10 transition-colors appearance-none cursor-pointer"
                 />
               </div>
@@ -439,52 +442,78 @@ function AppointmentForm() {
                   Preferred Time Slot *
                 </label>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {[
-                    { label: "Morning", time: "10:00 AM - 12:00 PM", icon: "🌅" },
-                    { label: "Afternoon", time: "12:00 PM - 04:00 PM", icon: "☀️" },
-                    { label: "Evening", time: "04:00 PM - 08:00 PM", icon: "🌇" }
-                  ].map((slot) => {
-                    const isSelected = time === slot.time;
-                    // Count how many standard bookings exist on this date for this slot
-                    const slotBookings = appointmentsForDate.filter(a => a.preferred_time === slot.time);
-                    const count = slotBookings.length;
-                    const isFull = count >= 3;
+                {(() => {
+                  const slots = [
+                    { label: "Morning", time: "10:00 AM - 12:00 PM", icon: "🌅", endMin: 720 },
+                    { label: "Afternoon", time: "12:00 PM - 04:00 PM", icon: "☀️", endMin: 960 },
+                    { label: "Evening", time: "04:00 PM - 08:00 PM", icon: "🌇", endMin: 1200 }
+                  ];
+                  
+                  const availableSlots = slots.filter(slot => {
+                    if (date === minDate) {
+                      const now = new Date();
+                      const currentMin = now.getHours() * 60 + now.getMinutes();
+                      return currentMin < slot.endMin;
+                    }
+                    return true;
+                  });
 
+                  if (availableSlots.length === 0) {
                     return (
-                      <button
-                        key={slot.time}
-                        type="button"
-                        disabled={isFull}
-                        onClick={() => setTime(slot.time)}
-                        className={`relative p-4 rounded-xl border text-left flex flex-col justify-between transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF2D95]/40 cursor-pointer ${
-                          isFull
-                            ? "bg-red-950/10 border-red-900/20 text-gray-500 opacity-60 cursor-not-allowed"
-                            : isSelected
-                              ? "bg-gradient-to-tr from-[#FF2D95]/20 to-[#7B2CFF]/20 border-[#FF2D95] shadow-lg shadow-[#FF2D95]/10"
-                              : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/5"
-                        }`}
-                      >
-                        <div>
-                          <span className="text-[9px] uppercase tracking-wider text-gray-400 font-semibold block mb-1">
-                            {slot.label}
-                          </span>
-                          <span className={`text-xs font-semibold flex items-center gap-2 ${isFull ? "text-gray-500" : "text-white"}`}>
-                            <span className="text-sm">{slot.icon}</span>
-                            {slot.time}
-                          </span>
-                        </div>
-                        <span className="text-[10px] mt-3 block font-medium">
-                          {isFull ? (
-                            <span className="text-red-400">🔴 Full</span>
-                          ) : (
-                            <span className="text-green-400">🟢 {count}/3 Booked</span>
-                          )}
-                        </span>
-                      </button>
+                      <div className="text-sm text-[#FF7A00] bg-[#FF7A00]/10 border border-[#FF7A00]/20 rounded-2xl p-5 text-center space-y-2">
+                        <p className="font-semibold">⚠️ No slots available for today</p>
+                        <p className="text-xs text-gray-400 font-light">
+                          All standard booking slots for today have already passed. Please select a future date or request a special custom timing using the checkbox above.
+                        </p>
+                      </div>
                     );
-                  })}
-                </div>
+                  }
+
+                  return (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {availableSlots.map((slot) => {
+                        const isSelected = time === slot.time;
+                        // Count how many standard bookings exist on this date for this slot
+                        const slotBookings = appointmentsForDate.filter(a => a.preferred_time === slot.time);
+                        const count = slotBookings.length;
+                        const isFull = count >= 3;
+
+                        return (
+                          <button
+                            key={slot.time}
+                            type="button"
+                            disabled={isFull}
+                            onClick={() => setTime(slot.time)}
+                            className={`relative p-4 rounded-xl border text-left flex flex-col justify-between transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF2D95]/40 cursor-pointer ${
+                              isFull
+                                ? "bg-red-950/10 border-red-900/20 text-gray-500 opacity-60 cursor-not-allowed"
+                                : isSelected
+                                  ? "bg-gradient-to-tr from-[#FF2D95]/20 to-[#7B2CFF]/20 border-[#FF2D95] shadow-lg shadow-[#FF2D95]/10"
+                                  : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/5"
+                            }`}
+                          >
+                            <div>
+                              <span className="text-[9px] uppercase tracking-wider text-gray-400 font-semibold block mb-1">
+                                {slot.label}
+                              </span>
+                              <span className={`text-xs font-semibold flex items-center gap-2 ${isFull ? "text-gray-500" : "text-white"}`}>
+                                <span className="text-sm">{slot.icon}</span>
+                                {slot.time}
+                              </span>
+                            </div>
+                            <span className="text-[10px] mt-3 block font-medium">
+                              {isFull ? (
+                                <span className="text-red-400">🔴 Full</span>
+                              ) : (
+                                <span className="text-green-400">🟢 {count}/3 Booked</span>
+                              )}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
                 <input type="hidden" name="preferred_time" value={time} required />
               </div>
             )}

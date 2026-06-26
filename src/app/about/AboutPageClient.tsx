@@ -31,7 +31,7 @@ function AnimatedCounter({ value, duration = 2 }: { value: number; duration?: nu
       if (!startTimestamp) startTimestamp = timestamp;
       const elapsed = timestamp - startTimestamp;
       const progress = Math.min(elapsed / (duration * 1000), 1);
-      setCount(Math.floor(progress * value));
+      setCount(progress * value);
       if (progress < 1) {
         requestAnimationFrame(step);
       }
@@ -39,7 +39,8 @@ function AnimatedCounter({ value, duration = 2 }: { value: number; duration?: nu
     requestAnimationFrame(step);
   }, [value, duration, isInView]);
 
-  return <span ref={ref}>{count}</span>;
+  const decimals = Number.isInteger(value) ? 0 : 1;
+  return <span ref={ref}>{count.toFixed(decimals)}</span>;
 }
 
 export default function AboutPageClient() {
