@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Sparkles, Maximize2, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { GalleryItem, supabase, isSupabaseConfigured, db, mapGalleryItem } from "@/lib/supabase";
+import type { GalleryItem } from "@/lib/supabase";
 
 interface TransformationsPageClientProps {
   initialGallery: GalleryItem[];
@@ -16,38 +16,47 @@ export default function TransformationsPageClient({ initialGallery }: Transforma
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(initialGallery);
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return;
-
     let cancelled = false;
+    let activeChannel: any = null;
 
-    db.getGallery()
-      .then((items) => {
-        if (!cancelled) setGalleryItems(items);
-      })
-      .catch((err) => console.error("Gallery data refresh failed:", err));
+    import("@/lib/supabase").then(({ supabase, isSupabaseConfigured, db, mapGalleryItem }) => {
+      if (!isSupabaseConfigured || !supabase) return;
 
-    const channel = supabase
-      .channel("gallery-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newItem = mapGalleryItem(payload.new as Record<string, unknown>);
-          setGalleryItems((prev) => {
-            if (prev.some((g) => g.id === newItem.id)) return prev;
-            return [newItem, ...prev];
-          });
-        } else if (payload.eventType === "UPDATE") {
-          const updatedItem = mapGalleryItem(payload.new as Record<string, unknown>);
-          setGalleryItems((prev) => prev.map((g) => (g.id === updatedItem.id ? updatedItem : g)));
-        } else if (payload.eventType === "DELETE") {
-          setGalleryItems((prev) => prev.filter((g) => g.id !== payload.old.id));
-        }
-      })
-      .subscribe();
+      db.getGallery()
+        .then((items) => {
+          if (!cancelled) setGalleryItems(items);
+        })
+        .catch((err) => console.error("Gallery data refresh failed:", err));
+
+      const channel = supabase
+        .channel("gallery-realtime")
+        .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapGalleryItem(payload.new as Record<string, unknown>);
+            setGalleryItems((prev) => {
+              if (prev.some((g) => g.id === newItem.id)) return prev;
+              return [newItem, ...prev];
+            });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapGalleryItem(payload.new as Record<string, unknown>);
+            setGalleryItems((prev) => prev.map((g) => (g.id === updatedItem.id ? updatedItem : g)));
+          } else if (payload.eventType === "DELETE") {
+            setGalleryItems((prev) => prev.filter((g) => g.id !== payload.old.id));
+          }
+        })
+        .subscribe();
+
+      activeChannel = channel;
+    });
 
     return () => {
       cancelled = true;
-      if (supabase) {
-        supabase.removeChannel(channel);
+      if (activeChannel) {
+        import("@/lib/supabase").then(({ supabase }) => {
+          if (supabase) {
+            supabase.removeChannel(activeChannel);
+          }
+        });
       }
     };
   }, []);
@@ -217,76 +226,67 @@ export default function TransformationsPageClient({ initialGallery }: Transforma
       </section>
 
       {/* LIGHTBOX POPUP */}
-      <AnimatePresence>
-        {activeLightboxIdx !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-10 select-none"
-            onClick={closeLightbox}
+      {activeLightboxIdx !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-10 select-none animate-fade-in"
+          onClick={closeLightbox}
+        >
+          {/* Top Bar info */}
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 text-white">
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] uppercase tracking-widest text-[#00D4FF] font-semibold">
+                {filteredItems[activeLightboxIdx].category}
+              </span>
+              <span className="text-sm font-bold font-serif">
+                {filteredItems[activeLightboxIdx].title}
+              </span>
+            </div>
+            <button 
+              onClick={closeLightbox}
+              className="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Left navigation */}
+          <button
+            onClick={prevImage}
+            className="absolute left-4 p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors z-10 hidden sm:block"
           >
-            {/* Top Bar info */}
-            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 text-white">
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] uppercase tracking-widest text-[#00D4FF] font-semibold">
-                  {filteredItems[activeLightboxIdx].category}
-                </span>
-                <span className="text-sm font-bold font-serif">
-                  {filteredItems[activeLightboxIdx].title}
-                </span>
-              </div>
-              <button 
-                onClick={closeLightbox}
-                className="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            <ChevronLeft className="w-6 h-6" />
+          </button>
 
-            {/* Left navigation */}
-            <button
-              onClick={prevImage}
-              className="absolute left-4 p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors z-10 hidden sm:block"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          {/* Main Image container */}
+          <div
+            className="relative w-full max-w-4xl h-[70vh] md:h-[80vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={filteredItems[activeLightboxIdx].imageUrl}
+              alt={filteredItems[activeLightboxIdx].title}
+              fill
+              className="object-contain max-h-full"
+              priority
+            />
+          </div>
 
-            {/* Main Image container */}
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-4xl h-[70vh] md:h-[80vh] flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Image
-                src={filteredItems[activeLightboxIdx].imageUrl}
-                alt={filteredItems[activeLightboxIdx].title}
-                fill
-                className="object-contain max-h-full"
-                priority
-              />
-            </motion.div>
+          {/* Right navigation */}
+          <button
+            onClick={nextImage}
+            className="absolute right-4 p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors z-10 hidden sm:block"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
 
-            {/* Right navigation */}
-            <button
-              onClick={nextImage}
-              className="absolute right-4 p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors z-10 hidden sm:block"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            {/* Swipe hints for mobile */}
-            <div className="absolute bottom-6 text-xs text-gray-500 font-light flex items-center gap-4 sm:hidden">
-              <span onClick={prevImage} className="underline active:text-[#FF2D95]">Prev</span>
-              <span>•</span>
-              <span onClick={nextImage} className="underline active:text-[#FF2D95]">Next</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* Swipe hints for mobile */}
+          <div className="absolute bottom-6 text-xs text-gray-500 font-light flex items-center gap-4 sm:hidden">
+            <span onClick={prevImage} className="underline active:text-[#FF2D95]">Prev</span>
+            <span>•</span>
+            <span onClick={nextImage} className="underline active:text-[#FF2D95]">Next</span>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

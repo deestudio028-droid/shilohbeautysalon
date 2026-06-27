@@ -1,15 +1,7 @@
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 export default function BridalPackages() {
   const goldTextGradient = "bg-gradient-to-r from-[#FFD166] to-[#FF7A00] bg-clip-text text-transparent";
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 15 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.5 }
-  } as const;
 
   return (
     <section className="py-28 bg-[#040816]/40 relative overflow-hidden">
@@ -134,13 +126,9 @@ export default function BridalPackages() {
               ]
             }
           ].map((pkg, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-              className="group relative rounded-2xl p-[1.5px] overflow-hidden"
+              className="group relative rounded-2xl p-[1.5px] overflow-hidden animate-fade-in"
             >
               {/* Gradient border */}
               <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${pkg.borderColor} opacity-60 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -208,7 +196,7 @@ export default function BridalPackages() {
                   </Link>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

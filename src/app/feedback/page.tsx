@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Star, Sparkles, User, Phone, Tag, MessageSquare, Upload, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { db } from "@/lib/supabase";
+
 
 export default function FeedbackPage() {
   const [name, setName] = useState("");
@@ -79,6 +79,7 @@ export default function FeedbackPage() {
       setPhotoPreview(URL.createObjectURL(file));
       
       // Upload to storage bucket
+      const { db } = await import("@/lib/supabase");
       const uploadedUrl = await db.uploadImage(file, "gallery");
       if (uploadedUrl) {
         setPhotoUrl(uploadedUrl);
@@ -124,6 +125,7 @@ export default function FeedbackPage() {
     setErrorMessage("");
 
     try {
+      const { db } = await import("@/lib/supabase");
       const created = await db.addFeedback({
         customer_name: name.trim(),
         phone_number: cleanDigits,
@@ -169,43 +171,31 @@ export default function FeedbackPage() {
       {/* HEADER SECTION */}
       <section className="relative pt-36 pb-12 border-b border-white/5 overflow-hidden bg-[#040816]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166] animate-fade-in"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#FFD166]" />
             Your Experience Matters
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl font-bold font-serif"
+          </div>
+          <h1
+            className="text-4xl sm:text-5xl font-bold font-serif animate-fade-in"
           >
             Share Your <span className={logoTextGradient}>Feedback</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
+          </h1>
+          <p
+            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed animate-fade-in"
           >
             Thank you for choosing Shiloh. We value your voice. Share your review below, and help us continue to shape royal services.
-          </motion.p>
+          </p>
         </div>
       </section>
 
       {/* FEEDBACK CONTENT */}
       <section className="py-20 max-w-2xl mx-auto px-4 sm:px-6 relative z-10">
-        <AnimatePresence mode="wait">
           {!isSuccess ? (
-            <motion.form
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+            <form
               onSubmit={handleSubmit}
-              className="glass-card p-8 sm:p-12 rounded-3xl border border-white/5 space-y-8 text-left"
+              className="glass-card p-8 sm:p-12 rounded-3xl border border-white/5 space-y-8 text-left animate-fade-in"
             >
               {/* Name & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -372,12 +362,10 @@ export default function FeedbackPage() {
               >
                 {submitting ? "Submitting Review..." : "Submit Feedback"}
               </button>
-            </motion.form>
+            </form>
           ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="glass-card p-10 sm:p-16 rounded-3xl border border-white/10 text-center space-y-6"
+            <div
+              className="glass-card p-10 sm:p-16 rounded-3xl border border-white/10 text-center space-y-6 animate-fade-in"
             >
               <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto text-green-400">
                 <Check className="w-8 h-8" />
@@ -408,9 +396,8 @@ export default function FeedbackPage() {
                   Submit Another Feedback
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </section>
 
       <Footer />

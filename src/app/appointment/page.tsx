@@ -4,10 +4,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Calendar, Phone, Sparkles, Check, Home, MapPin, User, FileText, Clock } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { db, Service, Appointment } from "@/lib/supabase";
+import type { Service, Appointment } from "@/lib/supabase";
 
 function AppointmentForm() {
   const searchParams = useSearchParams();
@@ -90,18 +90,25 @@ function AppointmentForm() {
 
   // Load services for select dropdown
   useEffect(() => {
+    let active = true;
     const loadServices = async () => {
       try {
+        const { db } = await import("@/lib/supabase");
         const data = await db.getServices();
-        setServices(data);
-        if (!queryService && data.length > 0) {
-          setSelectedService(data[0].name);
+        if (active) {
+          setServices(data);
+          if (!queryService && data.length > 0) {
+            setSelectedService(data[0].name);
+          }
         }
       } catch (err) {
         console.error("Failed to load services for appointment form:", err);
       }
     };
     loadServices();
+    return () => {
+      active = false;
+    };
   }, [queryService]);
 
   // Load bookings for selected date to compute capacity
@@ -110,22 +117,29 @@ function AppointmentForm() {
       setAppointmentsForDate([]);
       return;
     }
+    let active = true;
     const loadAppointmentsForDate = async () => {
       try {
+        const { db } = await import("@/lib/supabase");
         const data = await db.getAppointments();
-        // Count only "Pending Confirmation" and "Confirmed" appointments. Exclude "Completed" and "Cancelled".
-        // Also exclude Special Requests from standard slot capacity calculations.
-        const filtered = data.filter(a => 
-          a.preferred_date === date && 
-          (a.status === "Pending Confirmation" || a.status === "Confirmed") &&
-          a.booking_type !== "Special Request"
-        );
-        setAppointmentsForDate(filtered);
+        if (active) {
+          // Count only "Pending Confirmation" and "Confirmed" appointments. Exclude "Completed" and "Cancelled".
+          // Also exclude Special Requests from standard slot capacity calculations.
+          const filtered = data.filter(a => 
+            a.preferred_date === date && 
+            (a.status === "Pending Confirmation" || a.status === "Confirmed") &&
+            a.booking_type !== "Special Request"
+          );
+          setAppointmentsForDate(filtered);
+        }
       } catch (err) {
         console.error("Failed to load appointments for date:", err);
       }
     };
     loadAppointmentsForDate();
+    return () => {
+      active = false;
+    };
   }, [date]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -183,6 +197,7 @@ function AppointmentForm() {
         ? (reason.trim() ? `[Special Request Reason: ${reason.trim()}] ${notes}` : notes)
         : notes;
 
+      const { db } = await import("@/lib/supabase");
       const created = await db.createAppointment({
         name,
         phone: cleanDigits,
@@ -236,14 +251,11 @@ function AppointmentForm() {
   const minDate = getTodayDateStr();
 
   return (
-    <AnimatePresence mode="wait">
+    <>
       {!isSuccess ? (
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+        <form
           onSubmit={handleSubmit}
-          className="glass-card p-8 sm:p-12 rounded-3xl border border-white/5 space-y-8"
+          className="glass-card p-8 sm:p-12 rounded-3xl border border-white/5 space-y-8 animate-fade-in"
         >
           {/* Type Switcher */}
           <div className="space-y-3">
@@ -355,12 +367,7 @@ function AppointmentForm() {
 
             {/* Home Service Address */}
             {visitType === "Home Service" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="space-y-2 sm:col-span-2 overflow-hidden"
-              >
+              <div className="space-y-2 sm:col-span-2">
                 <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider block">
                   Home Address *
                 </label>
@@ -375,7 +382,7 @@ function AppointmentForm() {
                     className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-[#00D4FF] focus:bg-white/10 transition-colors"
                   />
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {/* Date */}
@@ -572,12 +579,10 @@ function AppointmentForm() {
           >
             {isSubmitting ? "Submitting Booking..." : "Submit Appointment"}
           </button>
-        </motion.form>
+        </form>
       ) : (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card p-10 sm:p-16 rounded-3xl border border-white/10 text-center space-y-6"
+        <div
+          className="glass-card p-10 sm:p-16 rounded-3xl border border-white/10 text-center space-y-6 animate-fade-in"
         >
           <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto text-green-400">
             <Check className="w-8 h-8" />
@@ -616,10 +621,9 @@ function AppointmentForm() {
               Verify on WhatsApp
             </Link>
           </div>
-        </motion.div>
-
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 
@@ -633,30 +637,22 @@ export default function AppointmentPage() {
       {/* HEADER SECTION */}
       <section className="relative pt-36 pb-12 border-b border-white/5 overflow-hidden bg-[#040816]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166] animate-fade-in"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#FFD166]" />
             Luxury Booking
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl font-bold font-serif"
+          </div>
+          <h1
+            className="text-4xl sm:text-5xl font-bold font-serif animate-fade-in"
           >
             Book An <span className={logoTextGradient}>Appointment</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
+          </h1>
+          <p
+            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed animate-fade-in"
           >
             Fill out the form below. Once received, our client coordinator will contact you via phone or WhatsApp to finalize your booking time and package details.
-          </motion.p>
+          </p>
         </div>
       </section>
 

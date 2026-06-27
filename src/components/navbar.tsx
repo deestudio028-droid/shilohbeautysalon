@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Calendar, Phone } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,11 +70,7 @@ export default function Navbar() {
                   >
                     {link.name}
                     {isActive && (
-                      <motion.div
-                        layoutId="activeNavLink"
-                        className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D95] to-[#7B2CFF]"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
+                      <div className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D95] to-[#7B2CFF] transition-all duration-300" />
                     )}
                   </Link>
                 );
@@ -121,65 +116,59 @@ export default function Navbar() {
       </nav>
 
       {/* MOBILE DRAWER */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 md:hidden bg-[#050B1F]/97 backdrop-blur-xl flex flex-col justify-center px-6 pt-20"
-          >
-            {/* Mobile logo */}
-            <div className="flex justify-center mb-10">
-              <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-[#FF2D95]/40 ring-offset-4 ring-offset-[#050B1F] shadow-2xl shadow-[#FF2D95]/30">
-                <Image
-                  src="/images/logo.webp"
-                  alt="Shiloh Salon"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
+      <div
+        className={`fixed inset-0 z-40 md:hidden bg-[#050B1F]/97 backdrop-blur-xl flex flex-col justify-center px-6 pt-20 transition-all duration-500 ${
+          isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+      >
+        {/* Mobile logo */}
+        <div className="flex justify-center mb-10">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-[#FF2D95]/40 ring-offset-4 ring-offset-[#050B1F] shadow-2xl shadow-[#FF2D95]/30">
+            <Image
+              src="/images/logo.webp"
+              alt="Shiloh Salon"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
 
-            <div className="flex flex-col items-center gap-6 mb-10">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`text-xl uppercase tracking-widest font-semibold font-serif ${
-                      isActive ? "text-[#FFD166]" : "text-gray-300"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
-            </div>
-            
-            <div className="flex flex-col gap-4 items-center">
+        <div className="flex flex-col items-center gap-6 mb-10">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
               <Link
-                href="/appointment"
+                key={link.name}
+                href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="w-full max-w-xs text-center py-3 text-sm font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full shadow-lg"
+                className={`text-xl uppercase tracking-widest font-semibold font-serif transition-colors duration-300 ${
+                  isActive ? "text-[#FFD166]" : "text-gray-300 hover:text-white"
+                }`}
               >
-                Book Appointment
+                {link.name}
               </Link>
-              <Link
-                href="https://wa.me/919962110080?text=Hi%20Shiloh%20Salon%2C%20I%20would%20like%20to%20enquire%20about%20your%20beauty%20services."
-                target="_blank"
-                onClick={() => setIsOpen(false)}
-                className="w-full max-w-xs text-center py-3 text-sm font-semibold uppercase tracking-wider text-white border border-white/10 rounded-full hover:bg-white/5 transition-all duration-300"
-              >
-                WhatsApp Chat
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            );
+          })}
+        </div>
+        
+        <div className="flex flex-col gap-4 items-center">
+          <Link
+            href="/appointment"
+            onClick={() => setIsOpen(false)}
+            className="w-full max-w-xs text-center py-3 text-sm font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full shadow-lg animate-pulse"
+          >
+            Book Appointment
+          </Link>
+          <Link
+            href="https://wa.me/919962110080?text=Hi%20Shiloh%20Salon%2C%20I%20would%20like%20to%20enquire%20about%20your%20beauty%20services."
+            target="_blank"
+            onClick={() => setIsOpen(false)}
+            className="w-full max-w-xs text-center py-3 text-sm font-semibold uppercase tracking-wider text-white border border-white/10 rounded-full hover:bg-white/5 transition-all duration-300"
+          >
+            WhatsApp Chat
+          </Link>
+        </div>
+      </div>
     </>
   );
 }

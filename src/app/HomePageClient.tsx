@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
 import { Calendar, Phone } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { Service, Product, GalleryItem, Feedback, supabase, isSupabaseConfigured, db, mapFeedback, mapGalleryItem } from "@/lib/supabase";
+import type { Service, Product, GalleryItem, Feedback } from "@/lib/supabase";
 
 // Dynamically import heavy sections to optimize bundle size (Navbar + Hero only in initial bundle)
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"), { ssr: true });
@@ -39,125 +38,134 @@ export default function HomePageClient({
   const [reviews, setReviews] = useState<Feedback[]>(initialReviews);
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return;
-
     let cancelled = false;
+    let activeChannel: any = null;
 
-    // Refresh from DB on mount so data is current even if SSR was cached
-    Promise.all([
-      db.getGallery().then((items) => {
-        if (!cancelled) setGallery(items.slice(0, 4));
-      }),
-      db.getFeedbacks({ approvedOnly: true }).then((items) => {
-        if (!cancelled) setReviews(items);
-      }),
-    ]).catch((err) => console.error("Homepage data refresh failed:", err));
+    import("@/lib/supabase").then(({ supabase, isSupabaseConfigured, db, mapFeedback, mapGalleryItem }) => {
+      if (!isSupabaseConfigured || !supabase) return;
 
-    const channel = supabase.channel("homepage-realtime");
+      // Refresh from DB on mount so data is current even if SSR was cached
+      Promise.all([
+        db.getGallery().then((items) => {
+          if (!cancelled) setGallery(items.slice(0, 4));
+        }),
+        db.getFeedbacks({ approvedOnly: true }).then((items) => {
+          if (!cancelled) setReviews(items);
+        }),
+      ]).catch((err) => console.error("Homepage data refresh failed:", err));
 
-    channel
-      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newItem: Service = {
-            id: payload.new.id,
-            name: payload.new.name,
-            category: payload.new.category || "",
-            description: payload.new.description || "",
-            duration: payload.new.duration || "",
-            benefits: payload.new.benefits || [],
-            imageUrl: payload.new.image_url || ""
-          };
-          if (newItem.category !== "Bridal Services") {
-            setFeaturedServices((prev) => [newItem, ...prev].slice(0, 4));
+      const channel = supabase.channel("homepage-realtime");
+
+      channel
+        .on("postgres_changes", { event: "*", schema: "public", table: "services" }, (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem: Service = {
+              id: payload.new.id,
+              name: payload.new.name,
+              category: payload.new.category || "",
+              description: payload.new.description || "",
+              duration: payload.new.duration || "",
+              benefits: payload.new.benefits || [],
+              imageUrl: payload.new.image_url || ""
+            };
+            if (newItem.category !== "Bridal Services") {
+              setFeaturedServices((prev) => [newItem, ...prev].slice(0, 4));
+            }
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem: Service = {
+              id: payload.new.id,
+              name: payload.new.name,
+              category: payload.new.category || "",
+              description: payload.new.description || "",
+              duration: payload.new.duration || "",
+              benefits: payload.new.benefits || [],
+              imageUrl: payload.new.image_url || ""
+            };
+            if (updatedItem.category === "Bridal Services") {
+              setFeaturedServices((prev) => prev.filter((s) => s.id !== updatedItem.id));
+            } else {
+              setFeaturedServices((prev) => prev.map((s) => (s.id === payload.new.id ? updatedItem : s)));
+            }
+          } else if (payload.eventType === "DELETE") {
+            setFeaturedServices((prev) => prev.filter((s) => s.id !== payload.old.id));
           }
-        } else if (payload.eventType === "UPDATE") {
-          const updatedItem: Service = {
-            id: payload.new.id,
-            name: payload.new.name,
-            category: payload.new.category || "",
-            description: payload.new.description || "",
-            duration: payload.new.duration || "",
-            benefits: payload.new.benefits || [],
-            imageUrl: payload.new.image_url || ""
-          };
-          if (updatedItem.category === "Bridal Services") {
-            setFeaturedServices((prev) => prev.filter((s) => s.id !== updatedItem.id));
-          } else {
-            setFeaturedServices((prev) => prev.map((s) => (s.id === payload.new.id ? updatedItem : s)));
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "products" }, (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem: Product = {
+              id: payload.new.id,
+              name: payload.new.name,
+              description: payload.new.description || "",
+              benefits: payload.new.benefits || [],
+              imageUrl: payload.new.image_url || ""
+            };
+            setProducts((prev) => [newItem, ...prev].slice(0, 4));
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem: Product = {
+              id: payload.new.id,
+              name: payload.new.name,
+              description: payload.new.description || "",
+              benefits: payload.new.benefits || [],
+              imageUrl: payload.new.image_url || ""
+            };
+            setProducts((prev) => prev.map((p) => (p.id === payload.new.id ? updatedItem : p)));
+          } else if (payload.eventType === "DELETE") {
+            setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
-        } else if (payload.eventType === "DELETE") {
-          setFeaturedServices((prev) => prev.filter((s) => s.id !== payload.old.id));
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newItem: Product = {
-            id: payload.new.id,
-            name: payload.new.name,
-            description: payload.new.description || "",
-            benefits: payload.new.benefits || [],
-            imageUrl: payload.new.image_url || ""
-          };
-          setProducts((prev) => [newItem, ...prev].slice(0, 4));
-        } else if (payload.eventType === "UPDATE") {
-          const updatedItem: Product = {
-            id: payload.new.id,
-            name: payload.new.name,
-            description: payload.new.description || "",
-            benefits: payload.new.benefits || [],
-            imageUrl: payload.new.image_url || ""
-          };
-          setProducts((prev) => prev.map((p) => (p.id === payload.new.id ? updatedItem : p)));
-        } else if (payload.eventType === "DELETE") {
-          setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newItem = mapGalleryItem(payload.new as Record<string, unknown>);
-          setGallery((prev) => {
-            if (prev.some((g) => g.id === newItem.id)) return prev;
-            return [newItem, ...prev].slice(0, 4);
-          });
-        } else if (payload.eventType === "UPDATE") {
-          const updatedItem = mapGalleryItem(payload.new as Record<string, unknown>);
-          setGallery((prev) => prev.map((g) => (g.id === updatedItem.id ? updatedItem : g)));
-        } else if (payload.eventType === "DELETE") {
-          setGallery((prev) => prev.filter((g) => g.id !== payload.old.id));
-        }
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newItem = mapFeedback(payload.new as Record<string, unknown>);
-          if (newItem.status === "Approved") {
-            setReviews((prev) => {
-              if (prev.some((r) => r.id === newItem.id)) return prev;
-              return [newItem, ...prev];
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "gallery" }, (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapGalleryItem(payload.new as Record<string, unknown>);
+            setGallery((prev) => {
+              if (prev.some((g) => g.id === newItem.id)) return prev;
+              return [newItem, ...prev].slice(0, 4);
             });
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapGalleryItem(payload.new as Record<string, unknown>);
+            setGallery((prev) => prev.map((g) => (g.id === updatedItem.id ? updatedItem : g)));
+          } else if (payload.eventType === "DELETE") {
+            setGallery((prev) => prev.filter((g) => g.id !== payload.old.id));
           }
-        } else if (payload.eventType === "UPDATE") {
-          const updatedItem = mapFeedback(payload.new as Record<string, unknown>);
-          if (updatedItem.status === "Approved") {
-            setReviews((prev) => {
-              const exists = prev.some((r) => r.id === updatedItem.id);
-              if (exists) {
-                return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
-              }
-              return [updatedItem, ...prev];
-            });
-          } else {
-            setReviews((prev) => prev.filter((r) => r.id !== updatedItem.id));
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "feedbacks" }, (payload) => {
+          if (payload.eventType === "INSERT") {
+            const newItem = mapFeedback(payload.new as Record<string, unknown>);
+            if (newItem.status === "Approved") {
+              setReviews((prev) => {
+                if (prev.some((r) => r.id === newItem.id)) return prev;
+                return [newItem, ...prev];
+              });
+            }
+          } else if (payload.eventType === "UPDATE") {
+            const updatedItem = mapFeedback(payload.new as Record<string, unknown>);
+            if (updatedItem.status === "Approved") {
+              setReviews((prev) => {
+                const exists = prev.some((r) => r.id === updatedItem.id);
+                if (exists) {
+                  return prev.map((r) => (r.id === updatedItem.id ? updatedItem : r));
+                }
+                return [updatedItem, ...prev];
+              });
+            } else {
+              setReviews((prev) => prev.filter((r) => r.id !== updatedItem.id));
+            }
+          } else if (payload.eventType === "DELETE") {
+            setReviews((prev) => prev.filter((r) => r.id !== payload.old.id));
           }
-        } else if (payload.eventType === "DELETE") {
-          setReviews((prev) => prev.filter((r) => r.id !== payload.old.id));
-        }
-      })
-      .subscribe();
+        })
+        .subscribe();
+
+      activeChannel = channel;
+    });
 
     return () => {
       cancelled = true;
-      if (supabase) {
-        supabase.removeChannel(channel);
+      if (activeChannel) {
+        import("@/lib/supabase").then(({ supabase }) => {
+          if (supabase) {
+            supabase.removeChannel(activeChannel);
+          }
+        });
       }
     };
   }, []);
@@ -285,47 +293,33 @@ export default function HomePageClient({
             {/* TEXT COLUMN */}
             <div className="lg:col-span-7 text-center lg:text-left space-y-7">
               {/* Elegant serif tagline in gold */}
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-xs uppercase tracking-[0.35em] font-medium text-[#FFD166]/80 font-serif italic"
+              {/* Elegant serif tagline in gold */}
+              <p
+                className="text-xs uppercase tracking-[0.35em] font-medium text-[#FFD166]/80 font-serif italic animate-fade-in"
               >
                 ✦ &nbsp; Where Beauty Meets Royalty &nbsp; ✦
-              </motion.p>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.05 }}
-                className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] font-serif"
+              </p>
+ 
+              <h1
+                className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] font-serif animate-fade-in"
               >
                 Luxury Hair &amp; <br />
                 <span className={logoTextGradient}>Beauty Salon</span>
-              </motion.h1>
-
+              </h1>
+ 
               {/* Thin gold divider line */}
-              <motion.div
-                initial={{ scaleX: 0, opacity: 0 }}
-                animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-                className="w-24 h-px bg-gradient-to-r from-[#FFD166] to-transparent mx-auto lg:mx-0 origin-left"
+              <div
+                className="w-24 h-px bg-gradient-to-r from-[#FFD166] to-transparent mx-auto lg:mx-0 origin-left animate-fade-in"
               />
-
-              <motion.p
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-gray-300 font-light text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0"
+ 
+              <p
+                className="text-gray-300 font-light text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 animate-fade-in"
               >
                 Step into a premium sanctuary designed for the modern woman and child. Expert bridal styling, skin rituals, and haircare inspired by royal beauty traditions.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.25 }}
-                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2"
+              </p>
+ 
+              <div
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2 animate-fade-in"
               >
                 <Link
                   href="/appointment"
@@ -342,14 +336,11 @@ export default function HomePageClient({
                   <Phone className="w-4 h-4 mr-2 text-[#FFD166]" />
                   WhatsApp Enquiry
                 </Link>
-              </motion.div>
-
+              </div>
+ 
               {/* Stats row */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.35 }}
-                className="flex items-center gap-8 pt-1 justify-center lg:justify-start border-t border-white/5 pt-6"
+              <div
+                className="flex items-center gap-8 pt-1 justify-center lg:justify-start border-t border-white/5 pt-6 animate-fade-in"
               >
                 {[
                   { num: "500+", label: "Happy Clients"    },
@@ -361,7 +352,7 @@ export default function HomePageClient({
                     <p className="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-medium mt-0.5">{stat.label}</p>
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             {/* LOGO COLUMN — static optimized logo container */}

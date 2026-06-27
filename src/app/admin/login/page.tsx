@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { KeyRound, Mail, Sparkles, Lock, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+
 import { db } from "@/lib/supabase";
 
 export default function AdminLoginPage() {
@@ -58,11 +58,8 @@ export default function AdminLoginPage() {
         <div className="absolute bottom-[20%] right-[20%] w-[35%] h-[35%] rounded-full bg-[#FF2D95]/10 blur-[150px] animate-float-delayed" />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md glass-card p-8 sm:p-10 rounded-3xl border border-white/10 relative z-10 space-y-8"
+      <div
+        className="w-full max-w-md glass-card p-8 sm:p-10 rounded-3xl border border-white/10 relative z-10 space-y-8 animate-fade-in"
       >
         {/* LOGO */}
         <div className="text-center space-y-2">
@@ -140,7 +137,7 @@ export default function AdminLoginPage() {
             Return to Public Site
           </Link>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
 import {
   Sparkles,
   Award,
@@ -18,11 +17,27 @@ import {
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
-// High-Performance Animated Counter component using requestAnimationFrame
+// High-Performance Animated Counter component using requestAnimationFrame and IntersectionObserver
 function AnimatedCounter({ value, duration = 2 }: { value: number; duration?: number }) {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.1, rootMargin: "-50px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!isInView) return;
@@ -76,59 +91,51 @@ export default function AboutPageClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* LEFT COLUMN */}
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="lg:col-span-7 space-y-6 text-left"
+            <div
+              className="lg:col-span-7 space-y-6 text-left animate-fade-in"
             >
               {/* Badges */}
               <div className="flex flex-wrap gap-3">
-                <motion.div
-                  variants={fadeInUp}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
+                <div
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166] animate-fade-in"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#FFD166]" />
                   ✨ Since 2018
-                </motion.div>
+                </div>
                 
-                <motion.div
-                  variants={fadeInUp}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FF2D95]/10 border border-[#FF2D95]/20 text-xs font-semibold text-white"
+                <div
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FF2D95]/10 border border-[#FF2D95]/20 text-xs font-semibold text-white animate-fade-in"
                 >
                   <Star className="w-3.5 h-3.5 text-[#FFD166] fill-[#FFD166]" />
                   ⭐ 4.9 Google Rating
                   <span className="text-gray-400 font-light mx-1">|</span>
                   📝 141 Reviews
-                </motion.div>
+                </div>
               </div>
 
               {/* Heading */}
-              <motion.h1
-                variants={fadeInUp}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold font-serif leading-tight"
+              <h1
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold font-serif leading-tight animate-fade-in"
               >
                 About <span className={logoTextGradient}>Shiloh</span> Beauty Salon
-              </motion.h1>
+              </h1>
 
               {/* Subheading */}
-              <motion.p
-                variants={fadeInUp}
-                className="text-[#FFD166] text-lg font-light leading-relaxed font-serif"
+              <p
+                className="text-[#FFD166] text-lg font-light leading-relaxed font-serif animate-fade-in"
               >
                 Kolathur, Chennai's trusted luxury destination for ladies and kids beauty care, bridal transformations, premium hair treatments, skincare services, and professional grooming.
-              </motion.p>
+              </p>
 
               {/* Story Description */}
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-300 font-light text-sm sm:text-base leading-relaxed"
+              <p
+                className="text-gray-300 font-light text-sm sm:text-base leading-relaxed animate-fade-in"
               >
                 Step into a world of curated beauty rituals where premium therapies meet unmatched customer pampering. For over 8 years, Shiloh Ladies & Kids Beauty Salon has been crafting bespoke transformations, utilizing premium skin-friendly formulations and advanced styling methodologies to help mothers, daughters, and kids look and feel their absolute best.
-              </motion.p>
+              </p>
 
               {/* Action Buttons */}
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-wrap gap-4 pt-4 animate-fade-in">
                 <Link
                   href="/appointment"
                   className="px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#FF2D95] via-[#7B2CFF] to-[#FF7A00] rounded-full hover:scale-105 active:scale-95 shadow-lg shadow-[#FF2D95]/20 hover:shadow-[#7B2CFF]/40 transition-all duration-300"
@@ -142,15 +149,12 @@ export default function AboutPageClient() {
                 >
                   Chat on WhatsApp
                 </Link>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* RIGHT COLUMN */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="lg:col-span-5 relative"
+            <div
+              className="lg:col-span-5 relative animate-fade-in"
             >
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-lg shadow-[#FF2D95]/5 group">
                 <Image
@@ -174,7 +178,7 @@ export default function AboutPageClient() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

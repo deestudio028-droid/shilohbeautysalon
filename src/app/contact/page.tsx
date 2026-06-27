@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
 import { Sparkles, Phone, MapPin, Clock, MessageSquare } from "lucide-react";
-import { motion } from "framer-motion";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -23,30 +20,22 @@ export default function ContactPage() {
       {/* HEADER SECTION */}
       <section className="relative pt-36 pb-12 border-b border-white/5 overflow-hidden bg-[#040816]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166]"
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs tracking-widest uppercase font-semibold text-[#FFD166] animate-fade-in"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#FFD166]" />
             Connect With Us
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl font-bold font-serif"
+          </div>
+          <h1
+            className="text-4xl sm:text-5xl font-bold font-serif animate-fade-in"
           >
             Get In <span className={logoTextGradient}>Touch</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
+          </h1>
+          <p
+            className="text-gray-400 font-light text-sm sm:text-base max-w-xl mx-auto leading-relaxed animate-fade-in"
           >
             Have a question about a service, custom bridal package, or academy admission? Connect with our client relations team directly.
-          </motion.p>
+          </p>
         </div>
       </section>
 
