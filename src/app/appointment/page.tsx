@@ -196,6 +196,25 @@ function AppointmentForm() {
       });
       setCreatedReference(created.appointment_reference);
       setIsSuccess(true);
+
+      // Trigger Telegram notification asynchronously (non-blocking)
+      fetch("/api/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: created.name,
+          phone: created.phone,
+          service: created.service,
+          preferred_date: created.preferred_date,
+          preferred_time: created.preferred_time,
+          booking_type: created.booking_type,
+          appointment_reference: created.appointment_reference
+        })
+      }).catch((tErr) => {
+        console.error("Telegram API call failed dynamically (async catch):", tErr);
+      });
     } catch (err: any) {
       console.error("Booking error:", err);
       setErrorMessage(err.message || "Failed to submit appointment. Please try again later.");
