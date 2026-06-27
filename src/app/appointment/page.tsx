@@ -204,6 +204,7 @@ function AppointmentForm() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          type: "booking",
           name: created.name,
           phone: created.phone,
           service: created.service,

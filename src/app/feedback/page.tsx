@@ -124,7 +124,7 @@ export default function FeedbackPage() {
     setErrorMessage("");
 
     try {
-      await db.addFeedback({
+      const created = await db.addFeedback({
         customer_name: name.trim(),
         phone_number: cleanDigits,
         service_name: service.trim(),
@@ -133,6 +133,25 @@ export default function FeedbackPage() {
         photo_url: photoUrl || undefined
       });
       setIsSuccess(true);
+
+      // Trigger Telegram notification asynchronously (non-blocking)
+      fetch("/api/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          type: "feedback",
+          name: created.customer_name,
+          phone: created.phone_number,
+          rating: created.rating,
+          service: created.service_name,
+          message: created.message,
+          date: created.created_at
+        })
+      }).catch((tErr) => {
+        console.error("Telegram feedback notification failed asynchronously:", tErr);
+      });
     } catch (err: any) {
       console.error("Feedback submit error:", err);
       setErrorMessage(err.message || "Failed to submit review. Please try again later.");
